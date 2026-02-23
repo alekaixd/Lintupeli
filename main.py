@@ -2,13 +2,22 @@ import Database
 import MigrationScript
 import Player
 
+"""
+This script is used for the main game loop logic
+"""
+
 
 def main():
     # starting point
 
+    # "login" user
+    #   ask for screen name
     # ask for save
     #   load game/new game
+    #       new game => ask for bird name
+    #       load game => select your bird
     # start game
+    # print info
     # choose action
     #   fly
     #       choose how long to fly (longer distance => more risk)
@@ -20,7 +29,7 @@ def main():
     #   change location
     #   change weather
     #   change energy
-    #   change date
+    #   change date (optional)
     # check if energy is depleted
     # check if winter is coming
     # check for win condition
@@ -35,10 +44,10 @@ def main():
             while flyLength == 0:  # Inputting might be changed here.
                 try:
                     flyLength = int(input("How long to fly? "))
+                    if flyLength == 0:
+                        print("cant be 0")
                 except ValueError:
                     print("Please only input integers")
-                if flyLength == 0:
-                    print("cant be 0")
             # fly
             print("flying...")
         elif action == "eat":
