@@ -42,6 +42,8 @@
 *.iml
 *.ipr
 
+__pycache__/
+
 # CMake
 cmake-build-*/
 
