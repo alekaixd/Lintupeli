@@ -1,5 +1,5 @@
-# Lintupeli
-Muuttolintupeli
+# Bird game
+Migration game
 
 Installing database for this project:
 Open mariadb and execute the following commands:
