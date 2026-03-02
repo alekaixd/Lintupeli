@@ -1,9 +1,13 @@
 #ONLY DATABASE FETCHES HERE
 import mysql.connector
 
-def SqlLoginCheck(user, password):
+connection = None
+
+# creates SQL connection and saves it to global variable connection
+def SqlConnect(user, password):
+    global connection
     try:
-        connection = mysql.connector.connect(
+        connect = mysql.connector.connect(
             host = 'localhost',
             port = 3306,
             database = 'bird_game',
@@ -11,8 +15,36 @@ def SqlLoginCheck(user, password):
             password = password,
             autocommit = True
         )
-        if (connection.is_connected()):
-            print("Is connected!")
-            return
+        if (connect.is_connected()):
+            print (f"Is connected!")
+            connection = connect
+            return True
     except:
         print("Couldn't log in!")
+        return False
+
+def FetchLocation(ICAO, sqlConnection):
+    sql = f"SELECT latitude_deg, longitude_deg FROM airport WHERE ident='{ICAO}'"
+    cursor = sqlConnection.cursor()
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    if(cursor.rowcount > 0):
+        for row in result:
+            return row
+    else:
+        return print("No location for that ICAO")
+
+def FetchAirportName(ICAO, sqlConnection):
+    sql = f"SELECT airport.name FROM airport WHERE ident='{ICAO}'"
+    cursor = sqlConnection.cursor()
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    if(cursor.rowcount > 0):
+        for row in result:
+            return row
+    else:
+        return print("No airport name for that ICAO")
+
+SqlConnect("unna", "34%thji90?")
+FetchAirportName("EFHK", connection)
+FetchLocation("EFHK", connection)
