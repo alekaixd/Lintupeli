@@ -3,6 +3,13 @@ import mysql.connector
 
 connection = None
 
+def Connect():
+    user = input("Give database user: ")
+    password = input("Give database users password: ")
+    SqlConnect(user, password)
+    return ()
+
+
 # creates SQL connection and saves it to global variable connection
 def SqlConnect(user, password):
     global connection
