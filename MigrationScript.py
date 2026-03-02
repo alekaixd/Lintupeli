@@ -44,12 +44,77 @@
 # basic version where there cant be crossroads inside crossroads
 # will probably rework
 
+# so basically all this is useless cuz i need to use a graph data structure
+# it needs to be a directed wheighted connected graph
+
 icaoCodes = ["BR-0673", "EFHK", "EFRN", "EFVA"]
 maps = []  # list of submaps
 mapsIndex = 0  # tells which submap player is on
 
 
-class Map:
+class Map:  # https://www.w3schools.com/dsa/dsa_data_graphs_implementation.php
+    def __init__(self, size: int):
+        self.adjacent = [[None] * size for s in range(size)]
+        self.size = size
+        self.vertex = [''] * size
+
+    def AddEdge(self, u, v, weight):
+        if 0 <= u < self.size and 0 <= v < self.size:
+            self.adjacent[u][v] = weight
+
+    def AddVertexData(self, vertex, icao):
+        if 0 <= vertex < self.size:
+            self.vertex[vertex] = icao
+
+    def print_graph(self):
+        print("Adjacency Matrix:")
+        for row in self.adjacent:
+            print(' '.join(map(lambda x: str(x) if x is not None else '0', row)))
+        print("\nVertex Data:")
+        for vertex, data in enumerate(self.vertex):
+            print(f"Vertex {vertex}: {data}")
+
+    def GetPaths(self, location: int):
+        # returns avaible paths from location vertex specifically icao code
+        roads = []
+        for v in range(len(self.adjacent[location])):
+            if self.adjacent[location][v] is not None:
+                roads.append(self.vertex[v])
+        return roads
+
+
+g = Map(4)
+g.AddVertexData(0, "EFHK")
+g.AddVertexData(1, "EFTU")
+g.AddVertexData(2, "EGBB")
+g.AddVertexData(3, "EGBN")
+g.AddEdge(0, 1, 3)  # A -> B with weight 3
+g.AddEdge(0, 2, 2)  # A -> C with weight 2
+g.AddEdge(1, 2, 2)  # B -> C with weight 2
+g.AddEdge(3, 0, 4)  # D -> A with weight 4
+g.AddEdge(2, 1, 1)  # C -> B with weight 1
+
+g.print_graph()
+
+
+# json file jossa on icao koodi ja siihen liittyvät liitännät
+# {
+# {"EFHK": {edge: 1, distance: 17}},
+# {"EFHi": {edge: 1, distance: 17}},
+# {"EFHh": {edge: 1, distance: 17}},
+# {"EFHl": {edge: 1, distance: 17}},
+# {"EFHp": {edge: 1, distance: 17}}
+# }
+
+def GetNextPort(currentStep: int):
+    ports = g.GetPaths(currentStep)
+    print(ports)
+
+
+GetNextPort(0)
+
+"""
+class MapOld:
     def __init__(self, codes: list):
         self.codes = codes
         self.airports = []
@@ -80,7 +145,6 @@ class Airport:
     def __str__(self):
         return f"Code: {self.code}"
 
-
 maps.append(Map(icaoCodes))
 print(maps[mapsIndex])
 
@@ -96,3 +160,5 @@ def ReadMapFile(url: str):
 
 
 ReadMapFile("testmap.map")
+
+"""
