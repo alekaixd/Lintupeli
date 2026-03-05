@@ -2,13 +2,13 @@
 import mysql.connector
 
 connection = None
+currentUserId = None
 
 def Connect():
     user = input("Give database user: ")
     password = input("Give database users password: ")
     SqlConnect(user, password)
-    return ()
-
+    return()
 
 # creates SQL connection and saves it to global variable connection
 def SqlConnect(user, password):
@@ -30,6 +30,7 @@ def SqlConnect(user, password):
         print("Couldn't log in!")
         return False
 
+
 def FetchLocation(ICAO, sqlConnection):
     sql = f"SELECT latitude_deg, longitude_deg FROM airport WHERE ident='{ICAO}'"
     cursor = sqlConnection.cursor()
@@ -50,20 +51,31 @@ def FetchAirportName(ICAO, sqlConnection):
     else:
         return print("No airport name for that ICAO")
 
+def UserInfo ():
+    username = input("Username: ")
+    password = input("Password: ")
+    return (username, password)
 
+#Inserts data into the given table from the given dictionary
+def InsertInto(tableName: str, dictionary: dict, sqlConnection):
+    columns = ', '.join(str(x).replace('/', '_') for x in dictionary.keys())
+    values = ', '.join("'" + str(x).replace('/', '_') + "'" for x in dictionary.values())
+    sql = "INSERT INTO %s ( %s ) VALUES ( %s );" % (tableName, columns, values)
+    cursor = sqlConnection.cursor()
+    cursor.execute(sql)
+    if(cursor.rowcount > 0):
+        print("Data was successfully saved")
+    else:
+        print("No data was inserted")
 
-def InsertInto(tableName: str, values: dict, sqlConnection):
-    if (tableName == "game" or tableName == "scores"):
-        fetchPlayerId = ""
+username, password = UserInfo()
 
 mydict = {
-    'location' : 'EFHK',
-    'currentEnergy' : '50',
-    'maxEnergy' : '100',
-    'species_name' : 'pulla sorsa',
-    'playerId' : 'id'
+    'username' : username,
+    'password_hash' : password,
 }
 
 Connect()
+InsertInto("user", mydict, connection)
 #FetchAirportName("EFHK", connection)
 #FetchLocation("EFHK", connection)
