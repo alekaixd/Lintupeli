@@ -1,5 +1,6 @@
 #ONLY DATABASE FETCHES HERE
 import mysql.connector
+import bcrypt
 
 connection = None
 currentUserId = None
@@ -59,20 +60,31 @@ def UserInfo ():
 
 #Inserts data into the given table from the given dictionary
 def InsertInto(tableName: str, dictionary: dict):
+    cursor = connection.cursor()
+
     if(tableName == "user"):
-        print("")
+
+        password = dictionary['password_hash']
+        username = dictionary['username']
+
+        salt = bcrypt.gensalt()
+        hashedPassword = bcrypt.hashpw(password.encode(), salt)
+
+        sql = f"INSERT INTO {tableName} (username, password_hash) VALUES ('{username}', '{hashedPassword.decode()}')"
+        cursor.execute(sql)
     else:
         columns = ', '.join(str(x).replace('/', '_') for x in dictionary.keys())
         values = ', '.join("'" + str(x).replace('/', '_') + "'" for x in dictionary.values())
-        sql = "INSERT INTO %s ( %s ) VALUES ( %s );" % (tableName, columns, values)
-        cursor = connection.cursor()
-        cursor.execute(sql)
-        if(cursor.rowcount > 0):
-            print("Data was successfully saved")
-        else:
-            print("No data was inserted")
 
-"""username, password = UserInfo()
+        sql = "INSERT INTO %s ( %s ) VALUES ( %s );" % (tableName, columns, values)
+        cursor.execute(sql)
+
+    if(cursor.rowcount > 0):
+        print("Data was successfully saved")
+    else:
+        print("No data was inserted")
+
+username, password = UserInfo()
 
 mydict = {
     'username' : username,
@@ -80,6 +92,6 @@ mydict = {
 }
 
 
-InsertInto("user", mydict)
+InsertInto("game", mydict)
 #FetchAirportName("EFHK")
 #FetchLocation("EFHK")"""
