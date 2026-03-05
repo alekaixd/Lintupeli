@@ -4,6 +4,8 @@ import mysql.connector
 connection = None
 currentUserId = None
 
+Connect()
+
 def Connect():
     user = input("Give database user: ")
     password = input("Give database users password: ")
@@ -78,7 +80,7 @@ mydict = {
     'password_hash' : password,
 }
 
-Connect()
+
 InsertInto("user", mydict)
 #FetchAirportName("EFHK")
 #FetchLocation("EFHK")"""
