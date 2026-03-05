@@ -2,6 +2,7 @@
 import mysql.connector
 
 connection = None
+currentUserId = None
 
 def Connect():
     user = input("Give database user: ")
@@ -30,6 +31,13 @@ def SqlConnect(user, password):
         print("Couldn't log in!")
         return False
 
+def CreateUser (sqlConnection):
+    global currentUserId
+    username = input("Username: ")
+    password = input("Password: ")
+    sql = f"INSERT INTO user ('')"
+
+
 def FetchLocation(ICAO, sqlConnection):
     sql = f"SELECT latitude_deg, longitude_deg FROM airport WHERE ident='{ICAO}'"
     cursor = sqlConnection.cursor()
@@ -54,7 +62,7 @@ def FetchAirportName(ICAO, sqlConnection):
 
 def InsertInto(tableName: str, values: dict, sqlConnection):
     if (tableName == "game" or tableName == "scores"):
-        fetchPlayerId = ""
+        #LAITA TÄHÄN, ETTÄ LISÄÄ NOITTEN DICTIONARYN ASIOITTEN LISÄKSI CURRENT_USER_ID:N!
 
 mydict = {
     'location' : 'EFHK',
