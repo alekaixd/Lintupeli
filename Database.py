@@ -7,9 +7,7 @@ currentUserId = None
 def Connect():
     user = input("Give database user: ")
     password = input("Give database users password: ")
-    SqlConnect(user, password)
     return ()
-
 
 # creates SQL connection and saves it to global variable connection
 def SqlConnect(user, password):
@@ -30,12 +28,6 @@ def SqlConnect(user, password):
     except:
         print("Couldn't log in!")
         return False
-
-def CreateUser (sqlConnection):
-    global currentUserId
-    username = input("Username: ")
-    password = input("Password: ")
-    sql = f"INSERT INTO user ('')"
 
 
 def FetchLocation(ICAO, sqlConnection):
@@ -58,20 +50,31 @@ def FetchAirportName(ICAO, sqlConnection):
     else:
         return print("No airport name for that ICAO")
 
+def UserInfo ():
+    username = input("Username: ")
+    password = input("Password: ")
+    return (username, password)
 
+#Inserts data into the given table from the given dictionary
+def InsertInto(tableName: str, dictionary: dict, sqlConnection):
+    columns = ', '.join("'" + str(x).replace('/', '_') + "'" for x in dictionary.keys())
+    values = ', '.join("'" + str(x).replace('/', '_') + "'" for x in dictionary.values())
+    sql = "INSERT INTO %s ( %s ) VALUES ( %s );" % (tableName, columns, values)
+    cursor = sqlConnection.cursor()
+    cursor.execute(sql)
+    if(cursor.rowcount > 0):
+        print("Data was successfully saved")
+    else:
+        print("No data was inserted")
 
-def InsertInto(tableName: str, values: dict, sqlConnection):
-    if (tableName == "game" or tableName == "scores"):
-        #LAITA TÄHÄN, ETTÄ LISÄÄ NOITTEN DICTIONARYN ASIOITTEN LISÄKSI CURRENT_USER_ID:N!
+username, password = UserInfo()
 
 mydict = {
-    'location' : 'EFHK',
-    'currentEnergy' : '50',
-    'maxEnergy' : '100',
-    'species_name' : 'pulla sorsa',
-    'playerId' : 'id'
+    'username' : username,
+    'password' : password,
 }
 
 Connect()
+InsertInto("user", mydict, connection)
 #FetchAirportName("EFHK", connection)
 #FetchLocation("EFHK", connection)
