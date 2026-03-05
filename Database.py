@@ -35,9 +35,8 @@ def FetchLocation(ICAO, sqlConnection):
     cursor = sqlConnection.cursor()
     cursor.execute(sql)
     result = cursor.fetchall()
-    if(cursor.rowcount > 0):
-        for row in result:
-            return row
+    if(result):
+        return result[0]
     else:
         return print("No location for that ICAO")
 
@@ -46,9 +45,8 @@ def FetchAirportName(ICAO, sqlConnection):
     cursor = sqlConnection.cursor()
     cursor.execute(sql)
     result = cursor.fetchall()
-    if(cursor.rowcount > 0):
-        for row in result:
-            return row
+    if(result):
+        return result[0]
     else:
         return print("No airport name for that ICAO")
 
