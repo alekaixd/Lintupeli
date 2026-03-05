@@ -110,6 +110,3 @@ def InsertInto(tableName: str, dictionary: dict):
         print("No data was inserted")
 
 CreateUserOrLogin()
-
-#FetchAirportName("EFHK")
-#FetchLocation("EFHK")"""
