@@ -31,9 +31,9 @@ def SqlConnect(user, password):
         return False
 
 
-def FetchLocation(ICAO, sqlConnection):
+def FetchLocation(ICAO):
     sql = f"SELECT latitude_deg, longitude_deg FROM airport WHERE ident='{ICAO}'"
-    cursor = sqlConnection.cursor()
+    cursor = connection.cursor()
     cursor.execute(sql)
     result = cursor.fetchall()
     if(result):
@@ -41,9 +41,9 @@ def FetchLocation(ICAO, sqlConnection):
     else:
         return print("No location for that ICAO")
 
-def FetchAirportName(ICAO, sqlConnection):
+def FetchAirportName(ICAO):
     sql = f"SELECT airport.name FROM airport WHERE ident='{ICAO}'"
-    cursor = sqlConnection.cursor()
+    cursor = connection.cursor()
     cursor.execute(sql)
     result = cursor.fetchall()
     if(result):
@@ -57,16 +57,19 @@ def UserInfo ():
     return (username, password)
 
 #Inserts data into the given table from the given dictionary
-def InsertInto(tableName: str, dictionary: dict, sqlConnection):
-    columns = ', '.join(str(x).replace('/', '_') for x in dictionary.keys())
-    values = ', '.join("'" + str(x).replace('/', '_') + "'" for x in dictionary.values())
-    sql = "INSERT INTO %s ( %s ) VALUES ( %s );" % (tableName, columns, values)
-    cursor = sqlConnection.cursor()
-    cursor.execute(sql)
-    if(cursor.rowcount > 0):
-        print("Data was successfully saved")
+def InsertInto(tableName: str, dictionary: dict):
+    if(tableName == "user"):
+        print("")
     else:
-        print("No data was inserted")
+        columns = ', '.join(str(x).replace('/', '_') for x in dictionary.keys())
+        values = ', '.join("'" + str(x).replace('/', '_') + "'" for x in dictionary.values())
+        sql = "INSERT INTO %s ( %s ) VALUES ( %s );" % (tableName, columns, values)
+        cursor = connection.cursor()
+        cursor.execute(sql)
+        if(cursor.rowcount > 0):
+            print("Data was successfully saved")
+        else:
+            print("No data was inserted")
 
 username, password = UserInfo()
 
@@ -76,6 +79,6 @@ mydict = {
 }
 
 Connect()
-InsertInto("user", mydict, connection)
-#FetchAirportName("EFHK", connection)
-#FetchLocation("EFHK", connection)
+InsertInto("user", mydict)
+#FetchAirportName("EFHK")
+#FetchLocation("EFHK")
