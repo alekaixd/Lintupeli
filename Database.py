@@ -4,14 +4,6 @@ import mysql.connector
 connection = None
 currentUserId = None
 
-def Connect():
-    user = input("Give database user: ")
-    password = input("Give database users password: ")
-    SqlConnect(user, password)
-    return()
-
-Connect()
-
 # creates SQL connection and saves it to global variable connection
 def SqlConnect(user, password):
     global connection
@@ -32,6 +24,13 @@ def SqlConnect(user, password):
         print("Couldn't log in!")
         return False
 
+def Connect():
+    user = input("Give database user: ")
+    password = input("Give database users password: ")
+    SqlConnect(user, password)
+    return()
+
+Connect()
 
 def FetchLocation(ICAO):
     sql = f"SELECT latitude_deg, longitude_deg FROM airport WHERE ident='{ICAO}'"
