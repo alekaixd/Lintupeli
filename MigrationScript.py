@@ -1,5 +1,3 @@
-# HERE ARE ALL POSSIBLE LOCATIONS FOR THE BIRD
-
 # this script gets called when the player wants location data
 # need a list of all map objects.
 # map object includes data of the airport
@@ -44,55 +42,88 @@
 # basic version where there cant be crossroads inside crossroads
 # will probably rework
 
-icaoCodes = ["BR-0673", "EFHK", "EFRN", "EFVA"]
-maps = []  # list of submaps
-mapsIndex = 0  # tells which submap player is on
+# so basically all this is useless cuz i need to use a graph data structure
+# it needs to be a directed wheighted connected graph
+
+import json
+
+# icaoCodes = ["BR-0673", "EFHK", "EFRN", "EFVA"]
 
 
-class Map:
-    def __init__(self, codes: list):
-        self.codes = codes
-        self.airports = []
-        self.InitAirports()
+class Map:  # https://www.w3schools.com/dsa/dsa_data_graphs_implementation.php
+    def __init__(self, size: int):
+        self.adjacent = [[None] * size for s in range(size)]
+        self.size = size
+        self.vertex = [''] * size
 
-    def __str__(self):
-        return f"{self.codes}"
+    def AddEdge(self, u, v, weight):
+        if 0 <= u < self.size and 0 <= v < self.size:
+            self.adjacent[u][v] = weight
 
-    def InitAirports(self):
-        for i in range(0, len(self.codes)):
-            self.airports.append(Airport(i, 1, 1))
-            if i < len(self.codes) - 1:
-                self.airports[i].nextAirport = self.codes[i + 1]
-            else:
-                return  # should return the next submaps first airport
+    def AddVertexData(self, vertex, icao):
+        if 0 <= vertex < self.size:
+            self.vertex[vertex] = icao
 
-    def GetAirport(self, index: int):
-        return self.airports[index]
+    def print_graph(self):
+        print("Adjacency Matrix:")
+        for row in self.adjacent:
+            print(' '.join(map(lambda x: str(x) if x is not None else '0', row)))
+        print("\nVertex Data:")
+        for vertex, data in enumerate(self.vertex):
+            print(f"Vertex {vertex}: {data}")
 
-
-class Airport:
-    def __init__(self, code: str, weather: int, food: int):
-        self.code = code
-        self.weather = weather
-        self.food = food
-        self.nextAirport = []
-
-    def __str__(self):
-        return f"Code: {self.code}"
-
-
-maps.append(Map(icaoCodes))
-print(maps[mapsIndex])
-
-position = maps[mapsIndex].GetAirport(2)
-print(position.nextAirport)
+    def GetPaths(self, location: int):
+        # returns avaible paths from location vertex specifically icao code
+        roads = []
+        for v in range(len(self.adjacent[location])):
+            if self.adjacent[location][v] is not None:
+                roads.append(self.vertex[v])
+        return roads
 
 
-def ReadMapFile(url: str):
-    raw = open(url).read()
-    # need to split with ':' aswell to make crossroads
-    submaps = raw.replace('\n', '').split(';')
-    print(submaps)
+g = None
+# g.AddVertexData(0, "EFHK")
+# g.AddVertexData(1, "EFTU")
+# g.AddVertexData(2, "EGBB")
+# g.AddVertexData(3, "EGBN")
+
+# g.AddEdge(0, 1, 3)  # A -> B with weight 3
+# g.AddEdge(0, 2, 2)  # A -> C with weight 2
+# g.AddEdge(1, 2, 2)  # B -> C with weight 2
+# g.AddEdge(3, 0, 4)  # D -> A with weight 4
+# g.AddEdge(2, 1, 1)  # C -> B with weight 1
+
+# g.print_graph()
 
 
-ReadMapFile("testmap.map")
+# json file jossa on icao koodi ja siihen liittyvät liitännät
+# {
+# {"EFHK": {edge: 1, distance: 17}},
+# {"EFHi": {edge: 1, distance: 17}},
+# {"EFHh": {edge: 1, distance: 17}},
+# {"EFHl": {edge: 1, distance: 17}},
+# {"EFHp": {edge: 1, distance: 17}}
+# }
+
+def GetNextPort(currentStep: int):
+    ports = g.GetPaths(currentStep)
+    print(ports)
+
+
+def ReadMapJson(path: str):
+    global g
+    with open(path, 'r') as file:
+        data = json.load(file)
+    for map in data.values():
+        for arr in map:
+            g = Map(len(arr))
+            for i, k in enumerate(arr):
+                g.AddVertexData(i, k)
+                for edge in arr[k]["edges"]:
+                    g.AddEdge(i, edge, 1)  # weight to be added
+    g.print_graph()
+    return
+
+
+ReadMapJson("testmap.json")
+GetNextPort(0)
