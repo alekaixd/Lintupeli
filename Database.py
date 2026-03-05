@@ -53,10 +53,35 @@ def FetchAirportName(ICAO):
     else:
         return print("No airport name for that ICAO")
 
-def UserInfo ():
-    username = input("Username: ")
-    password = input("Password: ")
-    return (username, password)
+def CreateUserOrLogin ():
+    command = int(input("Would you like to login (1) or create a new user (2): "))
+    if(command == 1):
+        global currentUserId
+        username = input("Username: ")
+        password = input("Password: ")
+        sql = f"SELECT password_hash, player_id FROM user WHERE username = '{username}'"
+        cursor = connection.cursor()
+        cursor.execute(sql)
+        result = cursor.fetchone()
+        print(result)
+        storedHash = result[0].encode()
+        if(bcrypt.checkpw(password.encode(), storedHash)):
+            print("login successful")
+            currentUserId = result[1]
+            return()
+
+    if(command == 2):
+        username = input("Username: ")
+        password = input("Password: ")
+
+        mydict = {
+            'username': username,
+            'password_hash': password,
+        }
+
+        InsertInto("user", mydict)
+        return ()
+
 
 #Inserts data into the given table from the given dictionary
 def InsertInto(tableName: str, dictionary: dict):
@@ -84,14 +109,7 @@ def InsertInto(tableName: str, dictionary: dict):
     else:
         print("No data was inserted")
 
-username, password = UserInfo()
+CreateUserOrLogin()
 
-mydict = {
-    'username' : username,
-    'password_hash' : password,
-}
-
-
-InsertInto("game", mydict)
 #FetchAirportName("EFHK")
 #FetchLocation("EFHK")"""
