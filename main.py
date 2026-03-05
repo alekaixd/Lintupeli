@@ -35,20 +35,28 @@ def main():
     # check for win condition
     # loop back
 
+    MigrationScript.InitMap()
     winCondition = False
+    currentAirport = MigrationScript.GetFirstPort()
+    print(f"Current airport: {currentAirport}")
     # Database.checkForSave()
     while winCondition is False:
         action = input("Choose action ('fly', 'eat', 'rest' or 'quit'): ")
         if action == "fly":
-            flyLength = 0
-            while flyLength == 0:  # Inputting might be changed here.
-                try:
-                    flyLength = int(input("How long to fly? "))
-                    if flyLength == 0:
-                        print("cant be 0")
-                except ValueError:
-                    print("Please only input integers")
-            # fly
+
+            # get flight locations from MigrationScript
+            # calculate distance between locations
+            # get energy levels from Player
+            # distance < energy * 10
+            #   good
+            # else
+            #   bad
+            flights = MigrationScript.GetNextPort(currentAirport)
+            print("choose where to fly: ")
+            for i, f in enumerate(flights):
+                print(f"({i}) fly to {
+                      Database.FetchAirportName(f, Database.connection)}")
+
             print("flying...")
         elif action == "eat":
             Player.eat()  # unwritten function

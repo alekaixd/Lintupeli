@@ -47,8 +47,6 @@
 
 import json
 
-# icaoCodes = ["BR-0673", "EFHK", "EFRN", "EFVA"]
-
 
 class Map:  # https://www.w3schools.com/dsa/dsa_data_graphs_implementation.php
     def __init__(self, size: int):
@@ -80,34 +78,22 @@ class Map:  # https://www.w3schools.com/dsa/dsa_data_graphs_implementation.php
                 roads.append(self.vertex[v])
         return roads
 
+    def GetIcaoIndex(self, icao: str):
+        for i in range(len(self.vertex)):
+            if self.vertex[i] == icao:
+                return i
+
 
 g = None
-# g.AddVertexData(0, "EFHK")
-# g.AddVertexData(1, "EFTU")
-# g.AddVertexData(2, "EGBB")
-# g.AddVertexData(3, "EGBN")
-
-# g.AddEdge(0, 1, 3)  # A -> B with weight 3
-# g.AddEdge(0, 2, 2)  # A -> C with weight 2
-# g.AddEdge(1, 2, 2)  # B -> C with weight 2
-# g.AddEdge(3, 0, 4)  # D -> A with weight 4
-# g.AddEdge(2, 1, 1)  # C -> B with weight 1
-
-# g.print_graph()
 
 
-# json file jossa on icao koodi ja siihen liittyvät liitännät
-# {
-# {"EFHK": {edge: 1, distance: 17}},
-# {"EFHi": {edge: 1, distance: 17}},
-# {"EFHh": {edge: 1, distance: 17}},
-# {"EFHl": {edge: 1, distance: 17}},
-# {"EFHp": {edge: 1, distance: 17}}
-# }
+def GetNextPort(icao: str):
+    ports = g.GetPaths(g.GetIcaoIndex(icao))
+    return ports
 
-def GetNextPort(currentStep: int):
-    ports = g.GetPaths(currentStep)
-    print(ports)
+
+def GetFirstPort():
+    return g.vertex[0]
 
 
 def ReadMapJson(path: str):
@@ -121,9 +107,12 @@ def ReadMapJson(path: str):
                 g.AddVertexData(i, k)
                 for edge in arr[k]["edges"]:
                     g.AddEdge(i, edge, 1)  # weight to be added
-    g.print_graph()
     return
 
 
-ReadMapJson("testmap.json")
-GetNextPort(0)
+def InitMap():
+    ReadMapJson("testmap.json")
+
+
+# InitMap()
+# print(g.GetIcaoIndex("EGBB"))
