@@ -37,7 +37,7 @@ def FetchLocation(ICAO, sqlConnection):
     result = cursor.fetchall()
     if(cursor.rowcount > 0):
         for row in result:
-            return print(row)
+            return row
     else:
         return print("No location for that ICAO")
 
@@ -48,10 +48,24 @@ def FetchAirportName(ICAO, sqlConnection):
     result = cursor.fetchall()
     if(cursor.rowcount > 0):
         for row in result:
-            return print(row)
+            return row
     else:
         return print("No airport name for that ICAO")
 
+
+
+def InsertInto(tableName: str, values: dict, sqlConnection):
+    if (tableName == "game" or tableName == "scores"):
+        fetchPlayerId = ""
+
+mydict = {
+    'location' : 'EFHK',
+    'currentEnergy' : '50',
+    'maxEnergy' : '100',
+    'species_name' : 'pulla sorsa',
+    'playerId' : 'id'
+}
+
 Connect()
-FetchAirportName("EFHK", connection)
-FetchLocation("EFHK", connection)
+#FetchAirportName("EFHK", connection)
+#FetchLocation("EFHK", connection)
