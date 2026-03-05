@@ -1,6 +1,7 @@
 import Database
 import MigrationScript
 import Player
+import geopy
 
 """
 This script is used for the main game loop logic
