@@ -42,7 +42,7 @@ def main():
     # Database.checkForSave()
     while winCondition is False:
         print(f"Current airport: {Database.FetchAirportName(
-            currentAirport, Database.connection)}")
+            currentAirport)}")
         action = input(
             "Write action (fly, chirp, eat, rest or quit): ")
         if action == "fly" or action == "f":
@@ -61,14 +61,14 @@ def main():
                     print("choose where to fly: ")
                     for i, f in enumerate(flights):
                         print(f"({i + 1}) fly to {
-                              Database.FetchAirportName(f, Database.connection)}")
+                              Database.FetchAirportName(f)}")
                     flyInput = int(
                         input(f"Input number (1 - {len(flights)}): "))
                     chosenDestination = flights[flyInput - 1]
                 else:  # if only 1 destination
                     chosenDestination = flights[0]
                 input(f"flap flap... you soar the skies towards {
-                      Database.FetchAirportName(chosenDestination, Database.connection)}. (any key to continue...) ")
+                      Database.FetchAirportName(chosenDestination)}. (any key to continue...) ")
                 currentAirport = chosenDestination
             else:
                 input("nowhere to fly. (any key to continue...)")
