@@ -71,7 +71,7 @@ def InsertInto(tableName: str, dictionary: dict):
         else:
             print("No data was inserted")
 
-username, password = UserInfo()
+"""username, password = UserInfo()
 
 mydict = {
     'username' : username,
@@ -81,4 +81,4 @@ mydict = {
 Connect()
 InsertInto("user", mydict)
 #FetchAirportName("EFHK")
-#FetchLocation("EFHK")
+#FetchLocation("EFHK")"""
