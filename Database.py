@@ -7,7 +7,8 @@ currentUserId = None
 def Connect():
     user = input("Give database user: ")
     password = input("Give database users password: ")
-    return ()
+    SqlConnect(user, password)
+    return()
 
 # creates SQL connection and saves it to global variable connection
 def SqlConnect(user, password):
@@ -57,7 +58,7 @@ def UserInfo ():
 
 #Inserts data into the given table from the given dictionary
 def InsertInto(tableName: str, dictionary: dict, sqlConnection):
-    columns = ', '.join("'" + str(x).replace('/', '_') + "'" for x in dictionary.keys())
+    columns = ', '.join(str(x).replace('/', '_') for x in dictionary.keys())
     values = ', '.join("'" + str(x).replace('/', '_') + "'" for x in dictionary.values())
     sql = "INSERT INTO %s ( %s ) VALUES ( %s );" % (tableName, columns, values)
     cursor = sqlConnection.cursor()
@@ -71,7 +72,7 @@ username, password = UserInfo()
 
 mydict = {
     'username' : username,
-    'password' : password,
+    'password_hash' : password,
 }
 
 Connect()
