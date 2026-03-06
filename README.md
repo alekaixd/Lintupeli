@@ -1,12 +1,14 @@
 # Bird game
 Migration game
 
+Dependencies: mysql-connector-python, geopy, bcrypt
+
 Installing database for this project:
 Open mariadb and execute the following commands:
 ```sql
 create database bird_game;
 Use "bird_game";
-source:full\path\to\yoursql\bird_game.sql;
+source full\path\to\yoursql\bird_game.sql;
 ```
 
 Give rights for your mariadb user:
