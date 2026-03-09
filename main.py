@@ -2,6 +2,8 @@ import Database
 import MigrationScript
 import Player
 from geopy import distance
+import platform
+import os
 
 """
 This script is used for the main game loop logic
@@ -39,26 +41,23 @@ def main():
     MigrationScript.InitMap()
     winCondition = False
     score = 0
+    energy = 20
+    maxEnergy = energy
     currentAirport = MigrationScript.GetFirstPort()
     # Database.checkForSave()
     while winCondition is False:
-        print(f"\nCurrent airport: {Database.FetchAirportName(
+        Clear()
+        print(f"Current airport: {Database.FetchAirportName(
             currentAirport)}")
+        print(f"Energy: {energy:.0f}")
         action = input(
-            "Write action (fly, chirp, eat, rest or quit): ")
-        if action == "fly" or action == "f":
+            "Write action (fly, chirp, eat or quit): ")
 
-            # get flight locations from MigrationScript
-            # calculate distance between locations
-            # get energy levels from Player
-            # distance < energy * 10
-            #   good
-            # else
-            #   bad
+        if action == "fly" or action == "f":
             flights = MigrationScript.GetNextPort(currentAirport)
             chosenDestination = None
-            if len(flights) >= 1:  # if destinations exist
 
+            if len(flights) >= 1:  # if destinations exist
                 if len(flights) > 1:  # if more than 1 destination
                     print("\nchoose where to fly\n")
 
@@ -103,9 +102,17 @@ def main():
                         continue
                     chosenDestination = flights[0]
 
+                energyUsed = round(CalculateDistance(
+                    currentAirport, chosenDestination)) / 10
+                energy -= energyUsed
+                if energy <= 0:
+                    LoseGame()
+
                 # if player flew
-                input(f"flap flap... you soar the skies towards {
-                      Database.FetchAirportName(chosenDestination)}.\n(any key to continue...) ")
+                print(f"\nflap flap... you soar the skies towards {
+                      Database.FetchAirportName(chosenDestination)}.")
+                print(f"You lost {energyUsed:.0f} energy")
+                input("(any key to continue...)")
                 currentAirport = chosenDestination
 
             else:  # if player at the end
@@ -113,12 +120,11 @@ def main():
                 winCondition = True
 
         elif action == "eat" or action == "e":
-            Player.eat()  # unwritten function
-        elif action == "rest" or action == "r":
-            Player.rest()
+            energy += Player.eat()
         elif action == "chirp" or action == "c":
             score += 50
-            print("chirp chirp!\nLocal residents are happy! + 50 points :D")
+            input(
+                "chirp chirp!\nLocal residents are happy! + 50 points :D\n(Enter to continue)")
         elif action == "quit" or action == "q":
             saveAction = ""
             while saveAction != "y" or saveAction != "n":
@@ -138,6 +144,19 @@ def CalculateDistance(icao1: str, icao2: str):
     i2 = Database.FetchLocation(icao2)
     dist = distance.distance(i1, i2).km
     return dist
+
+
+def LoseGame():
+    print("You ran out of energy and you fell from the sky :(")
+    quit()
+
+
+def Clear():
+    print(platform.system())
+    if platform.system() == "Linux":
+        os.system('clear')
+    elif platform.system() == "Windows":
+        os.system('cls')
 
 
 main()

@@ -32,13 +32,6 @@ import random
 # Player Actions
 
 
-def rest(energy):
-    gain = random.randint(5, 10)
-    energy += gain
-    print(f"You rested and gained {gain} energy.")
-    return energy
-
-
 def move_forward(energy):
     loss = random.randint(5, 10)
     energy -= loss
@@ -46,11 +39,10 @@ def move_forward(energy):
     return energy
 
 
-def eat(energy):
+def eat():
     gain = random.randint(2, 5)
-    energy += gain
     print(f"You ate some food and restored {gain} energy.")
-    return energy
+    return gain
 
 
 # Check game status
@@ -63,9 +55,8 @@ def check_energy(energy):
 
 
 # Game loop
-
+"""
 def game():
-    energy = 20
     playing = True
 
     print("Game started! Your energy:", energy)
@@ -90,7 +81,7 @@ def game():
 
         print("Current energy:", energy)
         playing = check_energy(energy)
-
+"""
 
 # --- Start Game ---
 # game()
