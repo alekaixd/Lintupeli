@@ -1,5 +1,6 @@
 # ONLY DATABASE FETCHES HERE
 import mysql.connector
+from mysql.connector import Error
 import bcrypt
 
 connection = None
@@ -31,8 +32,11 @@ def Connect():
     while True:
         user = input("Database username: ")
         password = input("Database password: ")
-        if (SqlConnect(user, password) is True):
-            break
+        if(user != "" and password != ""):
+            if (SqlConnect(user, password) is True):
+                break
+        else:
+            print("Anna nimi ja salasana!")
     return ()
 
 
@@ -62,43 +66,62 @@ def FetchAirportName(ICAO):
 
 
 def CreateUserOrLogin():
-    command = int(
-        input("Would you like to login (1) or create a new user (2): "))
-    if (command == 1):
-        global currentUserId
-        username = input("Username: ")
-        password = input("Password: ")
-        sql = f"SELECT password_hash, player_id FROM user WHERE username = '{
-            username}'"
-        cursor = connection.cursor()
-        cursor.execute(sql)
-        result = cursor.fetchone()
-        storedHash = result[0].strip().encode()
-        if(result is None):
-            print("User not found!")
-            CreateUserOrLogin()
-            return()
-        else:
+    global currentUserId
+
+    while True:
+        try:
+            command = int(input("Would you like to login (1) or create a new user (2): "))
+        except ValueError:
+            print("Incorrect input!")
+            continue
+
+        if (command == 1):
+            username = input("Username: ")
+            password = input("Password: ")
+
+            sql = "SELECT password_hash, player_id FROM user WHERE username = %s"
+            cursor = connection.cursor()
+            cursor.execute(sql, (username,))
+            result = cursor.fetchone()
+
+            if(result is None):
+                print("User not found! Try again!")
+                continue
+
+            storedHash = result[0].strip().encode()
+
             if (bcrypt.checkpw(password.encode(), storedHash)):
-                print("login successful")
+                print("Login successful")
                 currentUserId = result[1]
                 return()
             else:
-                print("Couldn't log in!")
-                CreateUserOrLogin()
+                print("Wrong password or username")
 
-    if (command == 2):
-        username = input("Username: ")
-        password = input("Password: ")
+        elif (command == 2):
+            while True:
+                username = input("Username: ")
+                password = input("Password: ")
 
-        mydict = {
-            'username': username,
-            'password_hash': password,
-        }
+                if(username == ""):
+                    print("Give a username!")
+                    continue
+                if(password == ""):
+                    print("Give a password!")
+                    continue
 
-        InsertInto("user", mydict)
-        return ()
+                mydict = {
+                    'username': username,
+                    'password_hash': password,
+                }
 
+                try:
+                    InsertInto("user", mydict)
+                    print("User created successfully!")
+                    break
+                except Exception:
+                    print("Username already exists! Please choose another.")
+        else:
+            print("Incorrect input")
 
 # Inserts data into the given table from the given dictionary
 def InsertInto(tableName: str, dictionary: dict):
@@ -187,7 +210,7 @@ def FetchScoresData():
 
 #games = FetchGameData(currentUserId)
 #ChooseGame(games)
-#CreateUserOrLogin()
+CreateUserOrLogin()
 
 """
 Game taululle:
