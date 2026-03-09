@@ -30,8 +30,8 @@ def SqlConnect(user, password):
 
 def Connect():
     while True:
-        user = input("Give database user: ")
-        password = input("Give database users password: ")
+        user = input("Database username: ")
+        password = input("Database password: ")
         if (SqlConnect(user, password) is True):
             break
     return ()
@@ -75,12 +75,19 @@ def CreateUserOrLogin():
         cursor = connection.cursor()
         cursor.execute(sql)
         result = cursor.fetchone()
-        print(result)
-        storedHash = result[0].encode()
-        if (bcrypt.checkpw(password.encode(), storedHash)):
-            print("login successful")
-            currentUserId = result[1]
-            return ()
+        storedHash = result[0].strip().encode()
+        if(result is None):
+            print("User not found!")
+            CreateUserOrLogin()
+            return()
+        else:
+            if (bcrypt.checkpw(password.encode(), storedHash)):
+                print("login successful")
+                currentUserId = result[1]
+                return()
+            else:
+                print("Couldn't log in!")
+                CreateUserOrLogin()
 
     if (command == 2):
         username = input("Username: ")
@@ -125,5 +132,21 @@ def InsertInto(tableName: str, dictionary: dict):
     else:
         print("No data was inserted")
 
+"""
+Game taululle:
+values = {"location":location,
+          "current_energy":currentEnergy,
+          "max_energy":maxEnergy,
+          "species_name":speciesName,
+          "player_id":currentUserId
+          }
+          
+Scores taululle:
+values = {"player_id":currentUserId,
+        "total_score":totalScore,
+        "days_survived":date
+        "game_id":currentGameId
+
+InsertInto("game", values)"""
 
 CreateUserOrLogin()
