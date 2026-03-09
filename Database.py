@@ -98,28 +98,28 @@ def CreateUserOrLogin():
                 print("Wrong password or username")
 
         elif (command == 2):
-            while True:
-                username = input("Username: ")
-                password = input("Password: ")
+            username = input("Username: ")
+            password = input("Password: ")
 
-                if(username == ""):
-                    print("Give a username!")
-                    continue
-                if(password == ""):
-                    print("Give a password!")
-                    continue
+            if(username == ""):
+                print("Give a username!")
+                continue
+            if(password == ""):
+                print("Give a password!")
+                continue
 
-                mydict = {
-                    'username': username,
-                    'password_hash': password,
-                }
+            mydict = {
+                'username': username,
+                'password_hash': password,
+            }
 
-                try:
-                    InsertInto("user", mydict)
-                    print("User created successfully!")
-                    break
-                except Exception:
-                    print("Username already exists! Please choose another.")
+            try:
+                InsertInto("user", mydict)
+                print("User created successfully!")
+                break
+            except Exception:
+                print("Username already exists! Please choose another.")
+                continue
         else:
             print("Incorrect input")
 
