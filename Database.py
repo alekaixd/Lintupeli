@@ -179,7 +179,11 @@ def ChooseGame(games):
                 print("Please enter a valid number.")
 
 def FetchScoresData():
-    sql = f"SELECT "
+    sql = f"SELECT scores.total_score, user.username, game.species_name FROM user JOIN scores ON scores.player_id = user.player_id JOIN game ON game.id = scores.game_id AND game.player_id = user.player_id WHERE game.status = 'completed'"
+    cursor = connection.cursor()
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    return result
 
 #games = FetchGameData(currentUserId)
 #ChooseGame(games)
