@@ -1,7 +1,7 @@
 import Database
 import MigrationScript
 import Player
-import geopy
+from geopy import distance
 
 """
 This script is used for the main game loop logic
@@ -42,7 +42,7 @@ def main():
     currentAirport = MigrationScript.GetFirstPort()
     # Database.checkForSave()
     while winCondition is False:
-        print(f"Current airport: {Database.FetchAirportName(
+        print(f"\nCurrent airport: {Database.FetchAirportName(
             currentAirport)}")
         action = input(
             "Write action (fly, chirp, eat, rest or quit): ")
@@ -58,21 +58,58 @@ def main():
             flights = MigrationScript.GetNextPort(currentAirport)
             chosenDestination = None
             if len(flights) >= 1:  # if destinations exist
+
                 if len(flights) > 1:  # if more than 1 destination
-                    print("choose where to fly: ")
+                    print("\nchoose where to fly\n")
+
                     for i, f in enumerate(flights):
                         print(f"({i + 1}) fly to {
                               Database.FetchAirportName(f)}")
-                    flyInput = int(
-                        input(f"Input number (1 - {len(flights)}): "))
-                    chosenDestination = flights[flyInput - 1]
+                        print(f"Distance to destination is {
+                              CalculateDistance(currentAirport, f):.0f}km\n")
+                    cancelCall = False
+                    while True:  # ik while true is bad but atleast its not chatgpt
+                        flyInput = input(
+                            f"Input number (1 - {len(flights)}) or cancel with (c): ")
+                        if flyInput == "c":
+                            print("cancelling...")
+                            cancelCall = True
+                            break
+                        elif 0 < int(flyInput) <= len(flights):
+                            chosenDestination = flights[int(flyInput) - 1]
+                            break
+                        else:
+                            print("Wrong input")
+                            flyinput = None
+                    if cancelCall is True:
+                        continue
+
                 else:  # if only 1 destination
+                    cancelCall = False
+                    while True:
+                        print(f"\nfly to {
+                              Database.FetchAirportName(flights[0])}")
+                        print(f"Distance to destination is {
+                              CalculateDistance(currentAirport, flights[0]):.0f}km")
+                        flyinput = input("Do you want to fly (y/n)")
+                        if flyinput == 'y':
+                            break
+                        elif flyinput == 'n':
+                            cancelCall = True
+                            break
+                        else:
+                            print("Wrong input")
+                    if cancelCall is True:
+                        continue
                     chosenDestination = flights[0]
+
+                # if player flew
                 input(f"flap flap... you soar the skies towards {
-                      Database.FetchAirportName(chosenDestination)}. (any key to continue...) ")
+                      Database.FetchAirportName(chosenDestination)}.\n(any key to continue...) ")
                 currentAirport = chosenDestination
+
             else:
-                input("nowhere to fly. (any key to continue...)")
+                input("nowhere to fly.\n(any key to continue...)")
 
         elif action == "eat" or action == "e":
             Player.eat()  # unwritten function
@@ -93,6 +130,13 @@ def main():
             print("Wrong input")
 
     return
+
+
+def CalculateDistance(icao1: str, icao2: str):
+    i1 = Database.FetchLocation(icao1)
+    i2 = Database.FetchLocation(icao2)
+    dist = distance.distance(i1, i2).km
+    return dist
 
 
 main()

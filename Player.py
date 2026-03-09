@@ -1,35 +1,36 @@
-#HERE ARE ALL THE FUNCTIONS AND OTHER STUFF FOR THE PLAYERS STATS
+# HERE ARE ALL THE FUNCTIONS AND OTHER STUFF FOR THE PLAYERS STATS
 
-    # starting point
+# starting point
 
-    # "login" user
-    #   ask for screen name
-    # ask for save
-    #   load game/new game
-    #       new game => ask for bird name
-    #       load game => select your bird
-    # start game
-    # print info
-    # choose action
-    #   fly
-    #       choose how long to fly (longer distance => more risk)
-    #   eat (raises max energy)
-    #   rest (restores all energy)
-    #   quit game
-    #       save game
-    # day cycle
-    #   change location
-    #   change weather
-    #   change energy
-    #   change date (optional)
-    # check if energy is depleted
-    # check if winter is coming
-    # check for win condition
-    # loop back
+# "login" user
+#   ask for screen name
+# ask for save
+#   load game/new game
+#       new game => ask for bird name
+#       load game => select your bird
+# start game
+# print info
+# choose action
+#   fly
+#       choose how long to fly (longer distance => more risk)
+#   eat (raises max energy)
+#   rest (restores all energy)
+#   quit game
+#       save game
+# day cycle
+#   change location
+#   change weather
+#   change energy
+#   change date (optional)
+# check if energy is depleted
+# check if winter is coming
+# check for win condition
+# loop back
 
 import random
 
-#Player Actions
+# Player Actions
+
 
 def rest(energy):
     gain = random.randint(5, 10)
@@ -52,7 +53,7 @@ def eat(energy):
     return energy
 
 
-#Check game status
+# Check game status
 
 def check_energy(energy):
     if energy <= 0:
@@ -61,7 +62,7 @@ def check_energy(energy):
     return True
 
 
-#Game loop
+# Game loop
 
 def game():
     energy = 20
