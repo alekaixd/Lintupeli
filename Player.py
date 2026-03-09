@@ -48,7 +48,7 @@ def move_forward(energy):
 
 
 def eat():
-    gain = random.randint(2, 5)
+    gain = random.randint(4, 12)
     print(f"You ate some food and gained {gain} max energy.")
     input("(Enter to continue)")
     return gain

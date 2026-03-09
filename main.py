@@ -44,12 +44,15 @@ def main():
     MigrationScript.InitMap()
     winCondition = False
     score = 0
-    energy = 20
+    energy = 30
     maxEnergy = energy
+    notMoved = 0
     currentAirport = MigrationScript.GetFirstPort()
     # Database.checkForSave()
     while winCondition is False:
         Clear()
+        if notMoved >= 3:
+            LoseGame(1)
         print(f"Current airport: {Database.FetchAirportName(
             currentAirport)}")
         print(f"Energy: {energy:.0f}/{maxEnergy}")
@@ -109,7 +112,7 @@ def main():
                     currentAirport, chosenDestination)) / 10
                 energy -= energyUsed
                 if energy <= 0:
-                    LoseGame()
+                    LoseGame(0)
 
                 # if player flew
                 print(f"\nflap flap... you soar the skies towards {
@@ -117,6 +120,7 @@ def main():
                 print(f"You lost {energyUsed:.0f} energy")
                 input("(Enter to continue)")
                 currentAirport = chosenDestination
+                notMoved = 0
 
             else:  # if player at the end
                 input("You migrated successfully!!1!1 :D")
@@ -126,13 +130,16 @@ def main():
             addEnergy = Player.eat()
             maxEnergy += addEnergy
             energy += addEnergy
+            notMoved += 1
         elif action == "sleep" or action == "s":
             energy = maxEnergy
             input("You slept well and restored all your energy!\n(Enter to continue)")
+            notMoved += 1
         elif action == "chirp" or action == "c":
             score += 50
             input(
                 "chirp chirp!\nLocal residents are happy! + 50 points :D\n(Enter to continue)")
+            notMoved += 1
         elif action == "quit" or action == "q":
             saveAction = ""
             while saveAction != "y" or saveAction != "n":
@@ -154,8 +161,11 @@ def CalculateDistance(icao1: str, icao2: str):
     return dist
 
 
-def LoseGame():
-    print("You ran out of energy and you fell from the sky :(")
+def LoseGame(reason: int):
+    if reason == 0:
+        print("You ran out of energy and you fell from the sky :(")
+    elif reason == 1:
+        print("The cold caught up to you. You lose D:")
     quit()
 
 

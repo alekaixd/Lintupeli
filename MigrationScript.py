@@ -111,7 +111,7 @@ def ReadMapJson(path: str):
 
 
 def InitMap():
-    ReadMapJson("testmap.json")
+    ReadMapJson("FinlandToItaly.json")
 
 
 # InitMap()
