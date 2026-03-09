@@ -132,12 +132,28 @@ def InsertInto(tableName: str, dictionary: dict):
 
 def SetCurrentGameId():
     global currentGameId
-    sql = f"SELECT id FROM game WHERE player_id = {currentUserId}"
+    sql = f"SELECT id FROM game WHERE player_id = {currentUserId} AND status = 'ongoing'"
     cursor = connection.cursor()
     cursor.execute(sql)
     result = cursor.fetchone()
     print(result)
-    currentGameId = result
+    currentGameId = result[0]
+
+def UpdateGameStatus(newStatus, gameId):
+    sql = "UPDATE game SET status = %s WHERE id = %s"
+    cursor = connection.cursor()
+    cursor.execute(sql, (newStatus, gameId))
+    connection.commit()
+
+def SaveGame():
+    SetCurrentGameId()
+
+    if currentGameId is not None:
+        status = input("Give game status (ongoing/completed): ")
+        UpdateGameStatus(status, currentGameId)
+        print("Game saved")
+    else:
+        print("No game to save")
 
 CreateUserOrLogin()
 SetCurrentGameId()
