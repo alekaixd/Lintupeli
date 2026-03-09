@@ -155,7 +155,35 @@ def SaveGame():
     else:
         print("No game to save")
 
-CreateUserOrLogin()
+def FetchGameData(userId, status="ongoing"):
+    sql = "SELECT location, current_energy, max_energy, species_name, score FROM game WHERE status=%s AND user_id=%s"
+    cursor = connection.cursor()
+    cursor.execute(sql, (status, userId))
+    games = cursor.fetchall()
+    return games
+
+def ChooseGame(games):
+    i = 1
+    for game in games:
+        location, current_energy, max_energy, species_name, score = game
+        print(f"{i}. {species_name} | Location: {location} | Energy: {current_energy}/{max_energy} | Score: {score}")
+        i += 1
+        while True:
+            try:
+                choice = int(input("Choose a game to load: ")) - 1
+                if 0 <= choice < len(games):
+                    return games[choice]
+                else:
+                    print("Give a valid number!")
+            except:
+                print("Please enter a valid number.")
+
+def FetchScoresData():
+    sql = f"SELECT "
+
+#games = FetchGameData(currentUserId)
+#ChooseGame(games)
+#CreateUserOrLogin()
 
 """
 Game taululle:
