@@ -38,6 +38,9 @@ def main():
     # check for win condition
     # loop back
 
+    Clear()
+    Player.newgame_intro()
+
     MigrationScript.InitMap()
     winCondition = False
     score = 0
@@ -49,9 +52,9 @@ def main():
         Clear()
         print(f"Current airport: {Database.FetchAirportName(
             currentAirport)}")
-        print(f"Energy: {energy:.0f}")
+        print(f"Energy: {energy:.0f}/{maxEnergy}")
         action = input(
-            "Write action (fly, chirp, eat or quit): ")
+            "Write action (fly, chirp, eat, sleep or quit): ")
 
         if action == "fly" or action == "f":
             flights = MigrationScript.GetNextPort(currentAirport)
@@ -112,7 +115,7 @@ def main():
                 print(f"\nflap flap... you soar the skies towards {
                       Database.FetchAirportName(chosenDestination)}.")
                 print(f"You lost {energyUsed:.0f} energy")
-                input("(any key to continue...)")
+                input("(Enter to continue)")
                 currentAirport = chosenDestination
 
             else:  # if player at the end
@@ -120,7 +123,12 @@ def main():
                 winCondition = True
 
         elif action == "eat" or action == "e":
-            energy += Player.eat()
+            addEnergy = Player.eat()
+            maxEnergy += addEnergy
+            energy += addEnergy
+        elif action == "sleep" or action == "s":
+            energy = maxEnergy
+            input("You slept well and restored all your energy!\n(Enter to continue)")
         elif action == "chirp" or action == "c":
             score += 50
             input(
@@ -155,7 +163,7 @@ def Clear():  # if for some reason clear command is different
     if platform.system() == "Linux":
         os.system('clear')
     elif platform.system() == "Windows":
-        os.system('clear')
+        os.system('cls')
 
 
 main()

@@ -31,14 +31,13 @@ import random
 
 # Player Actions
 
+
 def newgame_intro():
     print("Welcome to Bird Game!")
     print("=" * 40)
     print("\nYou are a bird trying to survive the winter.")
     print("Manage your energy wisely to reach your safe destination.")
     input("\nPress 'Enter' to get started!\n")
-
-newgame_intro()
 
 
 def move_forward(energy):
@@ -50,7 +49,8 @@ def move_forward(energy):
 
 def eat():
     gain = random.randint(2, 5)
-    print(f"You ate some food and restored {gain} energy.")
+    print(f"You ate some food and gained {gain} max energy.")
+    input("(Enter to continue)")
     return gain
 
 
