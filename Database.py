@@ -4,10 +4,9 @@ import bcrypt
 
 connection = None
 currentUserId = None
+currentGameId = None
 
 # creates SQL connection and saves it to global variable connection
-
-
 def SqlConnect(user, password):
     global connection
     try:
@@ -38,7 +37,6 @@ def Connect():
 
 
 Connect()
-
 
 def FetchLocation(ICAO):
     sql = f"SELECT latitude_deg, longitude_deg FROM airport WHERE ident='{
@@ -132,6 +130,18 @@ def InsertInto(tableName: str, dictionary: dict):
     else:
         print("No data was inserted")
 
+def SetCurrentGameId():
+    global currentGameId
+    sql = f"SELECT id FROM game WHERE player_id = {currentUserId}"
+    cursor = connection.cursor()
+    cursor.execute(sql)
+    result = cursor.fetchone()
+    print(result)
+    currentGameId = result
+
+CreateUserOrLogin()
+SetCurrentGameId()
+
 """
 Game taululle:
 values = {"location":location,
@@ -148,5 +158,3 @@ values = {"player_id":currentUserId,
         "game_id":currentGameId
 
 InsertInto("game", values)"""
-
-CreateUserOrLogin()
