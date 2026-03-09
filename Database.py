@@ -32,9 +32,10 @@ def Connect():
     while True:
         user = input("Give database user: ")
         password = input("Give database users password: ")
-        if(SqlConnect(user, password) is True):
+        if (SqlConnect(user, password) is True):
             break
-    return()
+    return ()
+
 
 Connect()
 
@@ -106,7 +107,8 @@ def InsertInto(tableName: str, dictionary: dict):
         salt = bcrypt.gensalt()
         hashedPassword = bcrypt.hashpw(password.encode(), salt)
 
-        sql = f"INSERT INTO {tableName} (username, password_hash) VALUES ( %s ,%s );"
+        sql = f"INSERT INTO {
+            tableName} (username, password_hash) VALUES ( %s ,%s );"
         cursor.execute(sql, (username, hashedPassword.decode()))
     else:
         columns = ', '.join(str(x).replace('/', '_')
@@ -114,7 +116,8 @@ def InsertInto(tableName: str, dictionary: dict):
         values = ', '.join("'" + str(x).replace('/', '_') +
                            "'" for x in dictionary.values())
 
-        sql = f"INSERT INTO %s ( %s ) VALUES ( %s );" % (tableName, columns, values)
+        sql = f"INSERT INTO %s ( %s ) VALUES ( %s );" % (
+            tableName, columns, values)
         cursor.execute(sql)
 
     if (cursor.rowcount > 0):
@@ -122,4 +125,5 @@ def InsertInto(tableName: str, dictionary: dict):
     else:
         print("No data was inserted")
 
-# CreateUserOrLogin()
+
+CreateUserOrLogin()

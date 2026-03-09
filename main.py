@@ -108,8 +108,9 @@ def main():
                       Database.FetchAirportName(chosenDestination)}.\n(any key to continue...) ")
                 currentAirport = chosenDestination
 
-            else:
-                input("nowhere to fly.\n(any key to continue...)")
+            else:  # if player at the end
+                input("You migrated successfully!!1!1 :D")
+                winCondition = True
 
         elif action == "eat" or action == "e":
             Player.eat()  # unwritten function
