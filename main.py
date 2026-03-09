@@ -151,12 +151,11 @@ def LoseGame():
     quit()
 
 
-def Clear():
-    print(platform.system())
+def Clear():  # if for some reason clear command is different
     if platform.system() == "Linux":
         os.system('clear')
     elif platform.system() == "Windows":
-        os.system('cls')
+        os.system('clear')
 
 
 main()
