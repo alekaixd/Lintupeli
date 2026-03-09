@@ -149,7 +149,8 @@ def SaveGame():
     SetCurrentGameId()
 
     if currentGameId is not None:
-        UpdateGameStatus("saved", currentGameId)
+        status = input("Give game status (ongoing/completed): ")
+        UpdateGameStatus(status, currentGameId)
         print("Game saved")
     else:
         print("No game to save")
