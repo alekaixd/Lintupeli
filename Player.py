@@ -31,6 +31,15 @@ import random
 
 # Player Actions
 
+def newgame_intro():
+    print("Welcome to Bird Game!")
+    print("=" * 40)
+    print("\nYou are a bird trying to survive the winter.")
+    print("Manage your energy wisely to reach your safe destination.")
+    input("\nPress 'Enter' to get started!\n")
+
+newgame_intro()
+
 
 def move_forward(energy):
     loss = random.randint(5, 10)
