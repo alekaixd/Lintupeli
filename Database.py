@@ -155,7 +155,7 @@ def SaveGame():
     else:
         print("No game to save")
 
-CreateUserOrLogin()
+#CreateUserOrLogin()
 
 """
 Game taululle:
