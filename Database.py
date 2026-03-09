@@ -26,9 +26,11 @@ def SqlConnect(user, password):
         return False
 
 def Connect():
-    user = input("Give database user: ")
-    password = input("Give database users password: ")
-    SqlConnect(user, password)
+    while True:
+        user = input("Give database user: ")
+        password = input("Give database users password: ")
+        if(SqlConnect(user, password) is True):
+            break
     return()
 
 Connect()
@@ -95,13 +97,13 @@ def InsertInto(tableName: str, dictionary: dict):
         salt = bcrypt.gensalt()
         hashedPassword = bcrypt.hashpw(password.encode(), salt)
 
-        sql = f"INSERT INTO {tableName} (username, password_hash) VALUES ('{username}', '{hashedPassword.decode()}')"
-        cursor.execute(sql)
+        sql = f"INSERT INTO {tableName} (username, password_hash) VALUES ( %s ,%s );"
+        cursor.execute(sql, (username, hashedPassword.decode()))
     else:
         columns = ', '.join(str(x).replace('/', '_') for x in dictionary.keys())
         values = ', '.join("'" + str(x).replace('/', '_') + "'" for x in dictionary.values())
 
-        sql = "INSERT INTO %s ( %s ) VALUES ( %s );" % (tableName, columns, values)
+        sql = f"INSERT INTO %s ( %s ) VALUES ( %s );" % (tableName, columns, values)
         cursor.execute(sql)
 
     if(cursor.rowcount > 0):
