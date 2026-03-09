@@ -156,7 +156,6 @@ def SaveGame():
         print("No game to save")
 
 CreateUserOrLogin()
-SetCurrentGameId()
 
 """
 Game taululle:
