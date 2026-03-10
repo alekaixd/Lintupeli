@@ -8,10 +8,12 @@ currentGameId = None
 
 open("loginCredentials.txt", "a").close()
 
+
 def SaveLoginCredentials(username, passwordHash):
     with open("loginCredentials.txt", "w") as f:
         f.write(f"username = {username}\n")
         f.write(f"password hash = {passwordHash.decode()}\n")
+
 
 def GetLoginCredentials():
     username = ""
@@ -21,14 +23,16 @@ def GetLoginCredentials():
         for line in f:
             key, values = line.strip().split("=")
 
-            if(key == "username"):
+            if (key == "username"):
                 username = values
-            if(key == "password hash"):
+            if (key == "password hash"):
                 passwordHash = values
 
     return (username, passwordHash)
 
 # creates SQL connection and saves it to global variable connection
+
+
 def SqlConnect(user, password):
     global connection
     try:
@@ -53,7 +57,7 @@ def Connect():
     while True:
         user = input("Database username: ")
         password = input("Database password: ")
-        if(user != "" and password != ""):
+        if (user != "" and password != ""):
             if (SqlConnect(user, password) is True):
                 break
         else:
@@ -63,11 +67,11 @@ def Connect():
 
 Connect()
 
+
 def FetchLocation(ICAO):
-    sql = f"SELECT latitude_deg, longitude_deg FROM airport WHERE ident='{
-        ICAO}'"
+    sql = f"SELECT latitude_deg, longitude_deg FROM airport WHERE ident=%s"
     cursor = connection.cursor()
-    cursor.execute(sql)
+    cursor.execute(sql, (ICAO,))
     result = cursor.fetchall()
     if (result):
         return result[0]
@@ -91,7 +95,8 @@ def CreateUserOrLogin():
 
     while True:
         try:
-            command = int(input("Would you like to login (1) or create a new user (2): "))
+            command = int(
+                input("Would you like to login (1) or create a new user (2): "))
         except ValueError:
             print("Incorrect input!")
             continue
@@ -105,7 +110,7 @@ def CreateUserOrLogin():
             cursor.execute(sql, (username,))
             result = cursor.fetchone()
 
-            if(result is None):
+            if (result is None):
                 print("User not found! Try again!")
                 continue
 
@@ -117,7 +122,7 @@ def CreateUserOrLogin():
 
                 SaveLoginCredentials(username, storedHash)
 
-                return()
+                return ()
             else:
                 print("Wrong password or username")
 
@@ -125,10 +130,10 @@ def CreateUserOrLogin():
             username = input("Username: ")
             password = input("Password: ")
 
-            if(username == ""):
+            if (username == ""):
                 print("Give a username!")
                 continue
-            if(password == ""):
+            if (password == ""):
                 print("Give a password!")
                 continue
 
@@ -148,6 +153,8 @@ def CreateUserOrLogin():
             print("Incorrect input")
 
 # Inserts data into the given table from the given dictionary
+
+
 def InsertInto(tableName: str, dictionary: dict):
     cursor = connection.cursor()
 
@@ -177,43 +184,42 @@ def InsertInto(tableName: str, dictionary: dict):
     else:
         print("No data was inserted")
 
+
 def SetCurrentGameId():
     global currentGameId
-    sql = f"SELECT id FROM game WHERE player_id = {currentUserId} AND status = 'ongoing'"
+    sql = f"SELECT id FROM game WHERE player_id = {
+        currentUserId} AND status = 'ongoing'"
     cursor = connection.cursor()
     cursor.execute(sql)
     result = cursor.fetchone()
     print(result)
     currentGameId = result[0]
 
-def UpdateGameStatus(newStatus, gameId):
-    sql = "UPDATE game SET status = %s WHERE id = %s"
-    cursor = connection.cursor()
-    cursor.execute(sql, (newStatus, gameId))
-    connection.commit()
 
-def SaveGame():
-    SetCurrentGameId()
+def LoadGame():
+    savedGames = FetchGameData(currentUserId)
+    if len(savedGames) > 0:
+        loadInput = input("Found saved games. Do you want to continue(y/n)? ")
+        if loadInput == "y":
+            ChooseGame(savedGames)
+        else:
+            return
 
-    if currentGameId is not None:
-        status = input("Give game status (ongoing/completed): ")
-        UpdateGameStatus(status, currentGameId)
-        print("Game saved")
-    else:
-        print("No game to save")
 
 def FetchGameData(userId, status="ongoing"):
-    sql = "SELECT location, current_energy, max_energy, species_name, score FROM game WHERE status=%s AND user_id=%s"
+    sql = "SELECT location, current_energy, max_energy, species_name, score FROM game WHERE status=%s AND player_id=%s"
     cursor = connection.cursor()
     cursor.execute(sql, (status, userId))
     games = cursor.fetchall()
     return games
 
+
 def ChooseGame(games):
     i = 1
     for game in games:
         location, current_energy, max_energy, species_name, score = game
-        print(f"{i}. {species_name} | Location: {location} | Energy: {current_energy}/{max_energy} | Score: {score}")
+        print(f"{i}. {species_name} | Location: {location} | Energy: {
+              current_energy}/{max_energy} | Score: {score}")
         i += 1
         while True:
             try:
@@ -225,6 +231,7 @@ def ChooseGame(games):
             except:
                 print("Please enter a valid number.")
 
+
 def FetchScoresData():
     sql = f"SELECT scores.total_score, user.username, game.species_name FROM user JOIN scores ON scores.player_id = user.player_id JOIN game ON game.id = scores.game_id AND game.player_id = user.player_id WHERE game.status = 'completed'"
     cursor = connection.cursor()
@@ -232,20 +239,49 @@ def FetchScoresData():
     result = cursor.fetchall()
     return result
 
-#games = FetchGameData(currentUserId)
-#ChooseGame(games)
+# games = FetchGameData(currentUserId)
+# ChooseGame(games)
+
 
 username, passwordHash = GetLoginCredentials()
 
-if(username != "" and passwordHash !=""):
+if (username != "" and passwordHash != ""):
     print("filler")
     sql = "SELECT password_hash, player_id from user where username = %s"
     cursor = connection.cursor()
     cursor.execute(sql)
-    #laita tänne, että tarkistaa löytyykö tuolla nimellä tietokannasta user ja passwordHash ja sitten
-    #tarkista onko stored passwordHash sama kuin tietokannan passwordHash
+    # laita tänne, että tarkistaa löytyykö tuolla nimellä tietokannasta user ja passwordHash ja sitten
+    # tarkista onko stored passwordHash sama kuin tietokannan passwordHash
 else:
     CreateUserOrLogin()
+
+
+def SaveGame(currentIcao, currentEnergy, maxenergy, birdName, score):
+    values = {
+        "id": currentGameId,
+        "location": currentIcao,
+        "current_energy": currentEnergy,
+        "max_energy": maxenergy,
+        "species_name": birdName,
+        "player_id": currentUserId,
+        "status": "saved",
+        "score": score
+    }
+    InsertInto("game", values)
+
+
+def StartGame(currentIcao, currentEnergy, maxenergy, birdName, status, score):
+    values = {
+        "location": currentIcao,
+        "current_energy": currentEnergy,
+        "max_energy": maxenergy,
+        "species_name": birdName,
+        "player_id": currentUserId,
+        "status": status,
+        "score": score
+    }
+    InsertInto("game", values)
+
 
 """
 Game taululle:

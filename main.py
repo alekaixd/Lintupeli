@@ -41,21 +41,36 @@ def main():
     Clear()
     Player.newgame_intro()
 
+    # checkForSave
+    Database.LoadGame()
+
     MigrationScript.InitMap()
     winCondition = False
+
+    bird = Player.choose_bird()
+    birdName = bird[0]
+
     score = 0
-    energy = 30
+    energy = bird[1]
     maxEnergy = energy
     notMoved = 0
+    status = "ongoing"
     currentAirport = MigrationScript.GetFirstPort()
-    # Database.checkForSave()
+
+    Database.StartGame(currentAirport, energy, maxEnergy,
+                       birdName, status, score)
+
+    Database.SetCurrentGameId()
+
     while winCondition is False:
         Clear()
+        print(Database.currentGameId)
         if notMoved >= 3:
             LoseGame(1)
         print(f"Current airport: {Database.FetchAirportName(
             currentAirport)}")
         print(f"Energy: {energy:.0f}/{maxEnergy}")
+        print(f"Score: {int(score)}")
         action = input(
             "Write action (fly, chirp, eat, sleep or quit): ")
 
@@ -114,8 +129,10 @@ def main():
                 if energy <= 0:
                     LoseGame(0)
 
+                score += energyUsed
+
                 # if player flew
-                print(f"\nflap flap... you soar the skies towards {
+                print(f"\nflap flap... The {birdName} soars the skies towards {
                       Database.FetchAirportName(chosenDestination)}.")
                 print(f"You lost {energyUsed:.0f} energy")
                 input("(Enter to continue)")
@@ -127,7 +144,7 @@ def main():
                 winCondition = True
 
         elif action == "eat" or action == "e":
-            addEnergy = Player.eat()
+            addEnergy = Player.bird_food_find(birdName)
             maxEnergy += addEnergy
             energy += addEnergy
             notMoved += 1
@@ -145,7 +162,10 @@ def main():
             while saveAction != "y" or saveAction != "n":
                 saveAction = input("Save game (y/n)? ")
                 if saveAction == "y":
-                    Database.saveGame()  # unwritten function
+                    # def SaveGame(currentIcao, currentEnergy, maxenergy, birdName, status, score):
+                    # unwritten function
+                    Database.SaveGame(currentAirport, energy,
+                                      maxEnergy, birdName, int(score))
                 elif saveAction == "n":
                     return
         else:
@@ -174,6 +194,10 @@ def Clear():  # if for some reason clear command is different
         os.system('clear')
     elif platform.system() == "Windows":
         os.system('cls')
+
+
+def CalculateFlightScore(combo: int):
+    return
 
 
 main()
