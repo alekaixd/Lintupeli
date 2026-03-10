@@ -50,13 +50,16 @@ def main():
     savedGame = Database.LoadGame()
     if savedGame:
         # Load data from saved game
+        currentGameId = Database.SetCurrentGameId()
         currentAirport = savedGame[0]
         energy = savedGame[1]
         maxEnergy = savedGame[2]
         birdName = savedGame[3]
         score = savedGame[4]
+        Database.UpdateGameStatus(currentGameId, "ongoing")
     else:
         # Start new game
+        currentGameId = Database.SetCurrentGameId()
         bird = Player.choose_bird()
         birdName = bird[0]
         energy = bird[1]
@@ -66,8 +69,6 @@ def main():
         Database.InsertGame(currentAirport, energy, maxEnergy, birdName, score, "ongoing")
 
     notMoved = 0
-
-    currentGameId = Database.SetCurrentGameId()
 
     while winCondition is False:
         Clear()

@@ -223,7 +223,6 @@ def SetCurrentGameId():
     result = cursor.fetchone()
 
     if result is None:
-        print("No saved game found")
         return None
     else:
         return result[0]
@@ -231,10 +230,11 @@ def SetCurrentGameId():
 
 def LoadGame():
     savedGames = FetchGameData(currentUserId)
-    if len(savedGames) > 0:
+    if savedGames:
         loadInput = input("Found saved games. Do you want to continue(y/n)? ")
         if loadInput == "y":
             chosenGame = ChooseGame(savedGames)
+
             return chosenGame
         else:
             return None
@@ -280,6 +280,13 @@ def DeleteGame(currentGameId):
     cursor = connection.cursor()
     cursor.execute(sql)
     connection.commit()
+
+def UpdateGameStatus(gameId, status):
+    sql = "UPDATE game SET status = %s WHERE id = %s"
+    cursor = connection.cursor()
+    cursor.execute(sql, (status, gameId))
+    connection.commit()
+    print(f"Game {gameId} status updated to {status}!")
 
 Connect()
 
