@@ -55,7 +55,6 @@ def main():
         maxEnergy = savedGame[2]
         birdName = savedGame[3]
         score = savedGame[4]
-        Database.UpdateGameStatus(currentGameId, "ongoing")
         currentGameId = Database.SetCurrentGameId()
     else:
         # Start new game

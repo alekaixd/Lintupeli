@@ -225,6 +225,7 @@ def SetCurrentGameId():
     if result is None:
         return None
     else:
+        print(f"PELIN ID: {result[0]}")
         return result[0]
 
 
@@ -232,19 +233,41 @@ def LoadGame():
     savedGames = FetchGameData(currentUserId)
     if savedGames:
         loadInput = input("Found saved games. Do you want to continue(y/n)? ")
-        if loadInput == "y":
+        if loadInput.lower() == "y":
             chosenGame = ChooseGame(savedGames)
 
-            return chosenGame
+            gameId = chosenGame[0]
+            UpdateGameStatus(gameId, "ongoing")
+
+            return chosenGame[1:]
         else:
             return None
     else:
         print("No saved games found!")
         return None
 
+def ChooseGame(games):
+    print("Select a game: ")
+    i = 1
+    for game in games:
+        game_id, location, current_energy, max_energy, species_name, score = game
+        print(
+            f"{i}. {species_name} | Location: {location} | Energy: {current_energy}/{max_energy} | Score: {score}")
+        i += 1
+
+    while True:
+        try:
+            choice = int(input("Choose a game to load: ")) - 1
+            if 0 <= choice < len(games):
+                return games[choice]  # returns full tuple including id
+            else:
+                print("Give a valid number!")
+        except:
+            print("Please enter a valid number.")
+
 
 def FetchGameData(userId, status="saved"):
-    sql = "SELECT location, current_energy, max_energy, species_name, score FROM game WHERE status=%s AND player_id=%s"
+    sql = "SELECT id, location, current_energy, max_energy, species_name, score FROM game WHERE status=%s AND player_id=%s"
     cursor = connection.cursor()
     cursor.execute(sql, (status, userId))
     games = cursor.fetchall()
@@ -256,24 +279,6 @@ def FetchScoresData():
     cursor.execute(sql)
     result = cursor.fetchall()
     return result
-
-def ChooseGame(games):
-    print("Selected game: ")
-    i = 1
-    for game in games:
-        location, current_energy, max_energy, species_name, score = game
-        print(f"{i}. {species_name} | Location: {location} | Energy: {current_energy}/{max_energy} | Score: {score}")
-        i += 1
-
-        while True:
-            try:
-                choice = int(input("Choose a game to load: ")) - 1
-                if 0 <= choice < len(games):
-                    return games[choice]
-                else:
-                    print("Give a valid number!")
-            except:
-                print("Please enter a valid number.")
 
 def DeleteGame(currentGameId):
     sql = f"DELETE FROM game WHERE id = {currentGameId}"
