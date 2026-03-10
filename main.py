@@ -138,6 +138,7 @@ def main():
                 print(f"\nflap flap... The {birdName} soars the skies towards {
                       Database.FetchAirportName(chosenDestination)}.")
                 print(f"You lost {energyUsed:.0f} energy")
+                Database.DeleteGame(currentGameId)
                 input("(Enter to continue)")
                 currentAirport = chosenDestination
                 notMoved = 0

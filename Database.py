@@ -271,6 +271,12 @@ def ChooseGame(games):
             except:
                 print("Please enter a valid number.")
 
+def DeleteGame(currentGameId):
+    sql = f"DELETE FROM game WHERE id = {currentGameId}"
+    cursor = connection.cursor()
+    cursor.execute(sql)
+    connection.commit()
+
 Connect()
 
 username, passwordHash = GetLoginCredentials()
