@@ -277,7 +277,7 @@ def FetchGameData(userId, status="saved"):
     return games
 
 def FetchScoresData():
-    sql = f"SELECT scores.total_score, user.username, game.species_name FROM user JOIN scores ON scores.player_id = user.player_id JOIN game ON game.id = scores.game_id AND game.player_id = user.player_id WHERE game.status = 'completed'"
+    sql = f"SELECT scores.total_score, user.username, game.species_name FROM user JOIN scores ON scores.player_id = user.player_id JOIN game ON game.id = scores.game_id AND game.player_id = user.player_id WHERE game.status = 'completed' ORDER BY scores.total_score DESC LIMIT 10"
     cursor = connection.cursor()
     cursor.execute(sql)
     result = cursor.fetchall()

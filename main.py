@@ -147,7 +147,24 @@ def main():
 
             else:  # if player at the end
                 input("You migrated successfully!!1!1 :D")
+                Database.UpdateGameStatus(currentGameId, "completed")
+                Database.InsertScore(int(score), None, currentGameId)
                 winCondition = True
+
+                act = int(input("Would you like to see the leaderboard (1) or play again (2)?: "))
+                if(act == 1):
+                    leaderboard = Database.FetchScoresData()
+                    print("\n==== Leaderboard ====")
+
+                    if not leaderboard:
+                        print("No scores yet!")
+                    else:
+                        for row in leaderboard:
+                            score, username, speciesName = row
+                            print(f"Species: {speciesName}, user: {username}, score: {score}\n")
+                if(act == 2):
+                    return
+
 
         elif action == "eat" or action == "e":
             addEnergy = Player.bird_food_find(birdName)
