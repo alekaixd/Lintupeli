@@ -59,7 +59,6 @@ def main():
         Database.UpdateGameStatus(currentGameId, "ongoing")
     else:
         # Start new game
-        currentGameId = Database.SetCurrentGameId()
         bird = Player.choose_bird()
         birdName = bird[0]
         energy = bird[1]
@@ -67,6 +66,7 @@ def main():
         score = 0
         currentAirport = MigrationScript.GetFirstPort()
         Database.InsertGame(currentAirport, energy, maxEnergy, birdName, score, "ongoing")
+        currentGameId = Database.SetCurrentGameId()
 
     notMoved = 0
 
