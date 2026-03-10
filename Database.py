@@ -203,7 +203,7 @@ def InsertScore(player_id, total_score, days_survived, game_id):
     else:
         print("No score inserted")
 
-def InsertGame (location, currentEnergy, maxEnergy, speciesName, status="saved", score, gameId=None):
+def InsertGame (location, currentEnergy, maxEnergy, speciesName, score, status="saved", gameId=None):
     #muista player id
     playerId = currentUserId
 
