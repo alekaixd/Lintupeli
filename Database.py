@@ -191,11 +191,12 @@ def InsertUser(username, password):
         print("No user was inserted")
 
 
-def InsertScore(player_id, total_score, days_survived, game_id):
+def InsertScore(totalScore, daysSurvived, gameId):
+    playerId = currentUserId
     cursor = connection.cursor()
 
     sql = f"INSERT INTO scores (player_id, total_score, days_survived, game_id) VALUES (%s, %s, %s, %s)"
-    cursor.execute(sql, (player_id, total_score, days_survived, game_id))
+    cursor.execute(sql, (playerId, totalScore, daysSurvived, gameId))
 
     if cursor.rowcount > 0:
         print("Score inserted")
