@@ -7,7 +7,7 @@ currentUserId = None
 currentGameId = None
 
 open("loginCredentials.txt", "a").close()
-
+open("databaseLoginCredentials.txt", "a").close()
 
 def SaveLoginCredentials(username, passwordHash):
     with open("loginCredentials.txt", "w") as f:
@@ -22,6 +22,8 @@ def GetLoginCredentials():
     with open("loginCredentials.txt", "r") as f:
         for line in f:
             key, values = line.strip().split("=")
+            key = key.strip()
+            values = values.strip()
 
             if (key == "username"):
                 username = values
@@ -29,6 +31,30 @@ def GetLoginCredentials():
                 passwordHash = values
 
     return (username, passwordHash)
+
+def SaveDatabaseLoginCredentials(user, password):
+    with open("databaseLoginCredentials.txt", "w") as f:
+        f.write(f"username = {user}\n")
+        f.write(f"password = {password}\n")
+
+
+def GetDatabaseLoginCredentials():
+    username = ""
+    password = ""
+
+    with open("databaseLoginCredentials.txt", "r") as f:
+        for line in f:
+            key, value = line.strip().split("=")
+            key = key.strip()
+            value = value.strip()
+
+            if(key == "username"):
+                username = value
+            if(key == "password"):
+                password = value
+
+    return(username, password)
+
 
 # creates SQL connection and saves it to global variable connection
 
@@ -54,15 +80,22 @@ def SqlConnect(user, password):
 
 
 def Connect():
-    while True:
-        user = input("Database username: ")
-        password = input("Database password: ")
-        if (user != "" and password != ""):
-            if (SqlConnect(user, password) is True):
-                break
-        else:
-            print("Anna nimi ja salasana!")
-    return ()
+    dbUsername, dbPassword = GetDatabaseLoginCredentials()
+
+    if(dbUsername != "" and dbPassword != ""):
+        if(SqlConnect(dbUsername, dbPassword) is True):
+            print("Database auto-login successfull!")
+            return
+    else:
+        while True:
+            user = input("Database username: ")
+            password = input("Database password: ")
+            if (user != "" and password != ""):
+                if (SqlConnect(user, password) is True):
+                    SaveDatabaseLoginCredentials(user, password)
+                    break
+            else:
+                print("Anna nimi ja salasana!")
 
 
 Connect()
@@ -137,13 +170,8 @@ def CreateUserOrLogin():
                 print("Give a password!")
                 continue
 
-            mydict = {
-                'username': username,
-                'password_hash': password,
-            }
-
             try:
-                InsertInto("user", mydict)
+                InsertUser(username, password)
                 print("User created successfully!")
                 break
             except Exception:
@@ -154,41 +182,50 @@ def CreateUserOrLogin():
 
 # Inserts data into the given table from the given dictionary
 
-
-def InsertInto(tableName: str, dictionary: dict):
+def InsertUser(username, password):
     cursor = connection.cursor()
 
-    if (tableName == "user"):
+    salt = bcrypt.gensalt()
+    hashedPassword = bcrypt.hashpw(password.encode(), salt)
 
-        password = dictionary['password_hash']
-        username = dictionary['username']
+    sql = "INSERT INTO user (username, password_hash) VALUES (%s, %s)"
+    cursor.execute(sql, (username, hashedPassword.decode()))
 
-        salt = bcrypt.gensalt()
-        hashedPassword = bcrypt.hashpw(password.encode(), salt)
-
-        sql = f"INSERT INTO {
-            tableName} (username, password_hash) VALUES ( %s ,%s );"
-        cursor.execute(sql, (username, hashedPassword.decode()))
+    if cursor.rowcount > 0:
+        print("User created successfully")
     else:
-        columns = ', '.join(str(x).replace('/', '_')
-                            for x in dictionary.keys())
-        values = ', '.join("'" + str(x).replace('/', '_') +
-                           "'" for x in dictionary.values())
+        print("No user was inserted")
 
-        sql = f"INSERT INTO %s ( %s ) VALUES ( %s );" % (
-            tableName, columns, values)
-        cursor.execute(sql)
 
-    if (cursor.rowcount > 0):
-        print("Data was successfully saved")
+def InsertScore(player_id, total_score, days_survived, game_id):
+    cursor = connection.cursor()
+
+    sql = f"INSERT INTO scores (player_id, total_score, days_survived, game_id) VALUES (%s, %s, %s, %s)"
+    cursor.execute(sql, (player_id, total_score, days_survived, game_id))
+
+    if cursor.rowcount > 0:
+        print("Score inserted")
     else:
-        print("No data was inserted")
+        print("No score inserted")
 
+def InsertGame (location, currentEnergy, maxEnergy, speciesName, status, score, gameId=None):
+    #muista player id
+    playerId = currentUserId
+
+    if gameId is None:
+        sql = f"INSERT INTO game (location, current_energy, max_energy, species_name, player_id, status, score) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+        cursor.execute(sql,(location, currentEnergy, maxEnergy, speciesName, playerId, status, score))
+        print("New game created!")
+        SetCurrentGameId()
+    else:
+        sql = f"UPDATE game SET location = %s, current_energy = %s, max_energy = %s, species_name = %s, status = %s, score = %s WHERE id = %s"
+
+        cursor.execute(sql,(location, currentEnergy, maxEnergy, speciesName, status, score, gameId))
+        print("Game saved!")
 
 def SetCurrentGameId():
     global currentGameId
-    sql = f"SELECT id FROM game WHERE player_id = {
-        currentUserId} AND status = 'ongoing'"
+    sql = f"SELECT id FROM game WHERE player_id = {currentUserId} AND status = 'ongoing'"
     cursor = connection.cursor()
     cursor.execute(sql)
     result = cursor.fetchone()
@@ -213,6 +250,12 @@ def FetchGameData(userId, status="ongoing"):
     games = cursor.fetchall()
     return games
 
+def FetchScoresData():
+    sql = f"SELECT scores.total_score, user.username, game.species_name FROM user JOIN scores ON scores.player_id = user.player_id JOIN game ON game.id = scores.game_id AND game.player_id = user.player_id WHERE game.status = 'completed'"
+    cursor = connection.cursor()
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    return result
 
 def ChooseGame(games):
     i = 1
@@ -231,57 +274,28 @@ def ChooseGame(games):
             except:
                 print("Please enter a valid number.")
 
-
-def FetchScoresData():
-    sql = f"SELECT scores.total_score, user.username, game.species_name FROM user JOIN scores ON scores.player_id = user.player_id JOIN game ON game.id = scores.game_id AND game.player_id = user.player_id WHERE game.status = 'completed'"
-    cursor = connection.cursor()
-    cursor.execute(sql)
-    result = cursor.fetchall()
-    return result
-
-# games = FetchGameData(currentUserId)
-# ChooseGame(games)
-
-
 username, passwordHash = GetLoginCredentials()
 
 if (username != "" and passwordHash != ""):
-    print("filler")
-    sql = "SELECT password_hash, player_id from user where username = %s"
+    sql = "SELECT password_hash, player_id FROM user WHERE username = %s"
     cursor = connection.cursor()
-    cursor.execute(sql)
-    # laita tänne, että tarkistaa löytyykö tuolla nimellä tietokannasta user ja passwordHash ja sitten
-    # tarkista onko stored passwordHash sama kuin tietokannan passwordHash
+    cursor.execute(sql, (username,))
+    result = cursor.fetchone()
+
+    if result:
+        hash = result[0].strip()
+
+        if hash == passwordHash:
+            print("Auto login successfull!")
+            currentUserId = result[1]
+        else:
+            print("Saved user or password invalid!")
+            CreateUserOrLogin()
+    else:
+        print("Saved user not found!")
+        CreateUserOrLogin()
 else:
     CreateUserOrLogin()
-
-
-def SaveGame(currentIcao, currentEnergy, maxenergy, birdName, score):
-    values = {
-        "id": currentGameId,
-        "location": currentIcao,
-        "current_energy": currentEnergy,
-        "max_energy": maxenergy,
-        "species_name": birdName,
-        "player_id": currentUserId,
-        "status": "saved",
-        "score": score
-    }
-    InsertInto("game", values)
-
-
-def StartGame(currentIcao, currentEnergy, maxenergy, birdName, status, score):
-    values = {
-        "location": currentIcao,
-        "current_energy": currentEnergy,
-        "max_energy": maxenergy,
-        "species_name": birdName,
-        "player_id": currentUserId,
-        "status": status,
-        "score": score
-    }
-    InsertInto("game", values)
-
 
 """
 Game taululle:
