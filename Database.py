@@ -239,7 +239,7 @@ def LoadGame():
         return None
 
 
-def FetchGameData(userId, status="ongoing"):
+def FetchGameData(userId, status="saved"):
     sql = "SELECT location, current_energy, max_energy, species_name, score FROM game WHERE status=%s AND player_id=%s"
     cursor = connection.cursor()
     cursor.execute(sql, (status, userId))
