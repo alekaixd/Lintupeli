@@ -209,11 +209,13 @@ def InsertGame (location, currentEnergy, maxEnergy, speciesName, score, status="
     if gameId is None:
         sql = f"INSERT INTO game (location, current_energy, max_energy, species_name, player_id, status, score) VALUES (%s, %s, %s, %s, %s, %s, %s)"
         cursor.execute(sql,(location, currentEnergy, maxEnergy, speciesName, playerId, status, score))
+        connection.commit()
         print("New game saved!")
     else:
         sql = f"UPDATE game SET location = %s, current_energy = %s, max_energy = %s, species_name = %s, status = %s, score = %s WHERE id = %s"
 
         cursor.execute(sql,(location, currentEnergy, maxEnergy, speciesName, status, score, gameId))
+        connection.commit()
         print("Game saved!")
 
 def SetCurrentGameId():
