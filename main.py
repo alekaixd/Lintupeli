@@ -41,23 +41,28 @@ def main():
     Clear()
     Player.newgame_intro()
 
-    # checkForSave
-    Database.LoadGame()
-
     MigrationScript.InitMap()
     winCondition = False
 
-    bird = Player.choose_bird()
-    birdName = bird[0]
+    savedGame = Database.LoadGame()
+    if savedGame:
+        # Load data from saved game
+        currentAirport = savedGame[0]
+        energy = savedGame[1]
+        maxEnergy = savedGame[2]
+        birdName = savedGame[3]
+        score = savedGame[4]
+    else:
+        # Start new game
+        bird = Player.choose_bird()
+        birdName = bird[0]
+        energy = bird[1]
+        maxEnergy = energy
+        score = 0
+        currentAirport = MigrationScript.GetFirstPort()
+        Database.InsertGame(currentAirport, energy, maxEnergy, birdName, score, "ongoing")
 
-    score = 0
-    energy = bird[1]
-    maxEnergy = energy
     notMoved = 0
-    status = "ongoing"
-    currentAirport = MigrationScript.GetFirstPort()
-
-    Database.InsertGame(currentAirport, energy, maxEnergy, birdName, status, score)
 
     currentGameId = Database.SetCurrentGameId()
 
@@ -161,9 +166,8 @@ def main():
             while saveAction != "y" or saveAction != "n":
                 saveAction = input("Save game (y/n)? ")
                 if saveAction == "y":
-                    # def SaveGame(currentIcao, currentEnergy, maxenergy, birdName, status, score):
-                    # unwritten function
-                    Database.InsertGame(currentAirport, energy, maxEnergy, birdName, int(score), currentGameId)
+                    Database.InsertGame(currentAirport, energy, maxEnergy, birdName, int(score), gameId=currentGameId)
+                    return
                 elif saveAction == "n":
                     return
         else:

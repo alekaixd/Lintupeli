@@ -210,7 +210,7 @@ def InsertGame (location, currentEnergy, maxEnergy, speciesName, score, status="
     if gameId is None:
         sql = f"INSERT INTO game (location, current_energy, max_energy, species_name, player_id, status, score) VALUES (%s, %s, %s, %s, %s, %s, %s)"
         cursor.execute(sql,(location, currentEnergy, maxEnergy, speciesName, playerId, status, score))
-        print("New game created!")
+        print("New game saved!")
     else:
         sql = f"UPDATE game SET location = %s, current_energy = %s, max_energy = %s, species_name = %s, status = %s, score = %s WHERE id = %s"
 
@@ -232,12 +232,13 @@ def LoadGame():
     if len(savedGames) > 0:
         loadInput = input("Found saved games. Do you want to continue(y/n)? ")
         if loadInput == "y":
-            ChooseGame(savedGames)
+            chosenGame = ChooseGame(savedGames)
+            return chosenGame
         else:
-            return
+            return None
     else:
         print("No saved games found!")
-        return
+        return None
 
 
 def FetchGameData(userId, status="ongoing"):
@@ -255,12 +256,13 @@ def FetchScoresData():
     return result
 
 def ChooseGame(games):
+    print("Selected game: ")
     i = 1
     for game in games:
         location, current_energy, max_energy, species_name, score = game
-        print(f"{i}. {species_name} | Location: {location} | Energy: {
-              current_energy}/{max_energy} | Score: {score}")
+        print(f"{i}. {species_name} | Location: {location} | Energy: {current_energy}/{max_energy} | Score: {score}")
         i += 1
+
         while True:
             try:
                 choice = int(input("Choose a game to load: ")) - 1
