@@ -28,11 +28,11 @@ def check_energy(energy):
 def choose_bird():
     birds = {
         "1": {"name": "Eagle", "energy": 50, "difficulty": "Easy"},
-        "2": {"name": "Raven", "energy": 45, "difficulty": "Easy"},
+        "2": {"name": "Raven", "energy": 50, "difficulty": "Easy"},
         "3": {"name": "Sparrow", "energy": 40, "difficulty": "Medium"},
-        "4": {"name": "Hawk", "energy": 35, "difficulty": "Medium"},
+        "4": {"name": "Hawk", "energy": 40, "difficulty": "Medium"},
         "5": {"name": "Owl", "energy": 30, "difficulty": "Hard"},
-        "6": {"name": "Pigeon", "energy": 32, "difficulty": "Hard"}
+        "6": {"name": "Pigeon", "energy": 30, "difficulty": "Hard"}
     }
         
     print("\nChoose your bird:")
@@ -48,7 +48,7 @@ def choose_bird():
         else:
             print("Invalid choice. Please enter 1-5.")
 
-def eat(bird_name):
+def bird_food_find(bird_name):
     foods = {
         "worm": 8,
         "seeds": 5,
