@@ -57,10 +57,9 @@ def main():
     status = "ongoing"
     currentAirport = MigrationScript.GetFirstPort()
 
-    Database.StartGame(currentAirport, energy, maxEnergy,
-                       birdName, status, score)
+    Database.InsertGame(currentAirport, energy, maxEnergy, birdName, status, score)
 
-    Database.SetCurrentGameId()
+    currentGameId = Database.SetCurrentGameId()
 
     while winCondition is False:
         Clear()
@@ -164,8 +163,7 @@ def main():
                 if saveAction == "y":
                     # def SaveGame(currentIcao, currentEnergy, maxenergy, birdName, status, score):
                     # unwritten function
-                    Database.SaveGame(currentAirport, energy,
-                                      maxEnergy, birdName, int(score))
+                    Database.InsertGame(currentAirport, energy, maxEnergy, birdName, int(score), currentGameId)
                 elif saveAction == "n":
                     return
         else:

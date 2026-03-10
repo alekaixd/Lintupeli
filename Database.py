@@ -57,8 +57,6 @@ def GetDatabaseLoginCredentials():
 
 
 # creates SQL connection and saves it to global variable connection
-
-
 def SqlConnect(user, password):
     global connection
     try:
@@ -84,7 +82,7 @@ def Connect():
 
     if(dbUsername != "" and dbPassword != ""):
         if(SqlConnect(dbUsername, dbPassword) is True):
-            print("Database auto-login successfull!")
+            print("Database auto login successfull!")
             return
     else:
         while True:
@@ -96,10 +94,6 @@ def Connect():
                     break
             else:
                 print("Anna nimi ja salasana!")
-
-
-Connect()
-
 
 def FetchLocation(ICAO):
     sql = f"SELECT latitude_deg, longitude_deg FROM airport WHERE ident=%s"
@@ -216,7 +210,6 @@ def InsertGame (location, currentEnergy, maxEnergy, speciesName, status, score, 
         sql = f"INSERT INTO game (location, current_energy, max_energy, species_name, player_id, status, score) VALUES (%s, %s, %s, %s, %s, %s, %s)"
         cursor.execute(sql,(location, currentEnergy, maxEnergy, speciesName, playerId, status, score))
         print("New game created!")
-        SetCurrentGameId()
     else:
         sql = f"UPDATE game SET location = %s, current_energy = %s, max_energy = %s, species_name = %s, status = %s, score = %s WHERE id = %s"
 
@@ -273,6 +266,8 @@ def ChooseGame(games):
                     print("Give a valid number!")
             except:
                 print("Please enter a valid number.")
+
+Connect()
 
 username, passwordHash = GetLoginCredentials()
 
