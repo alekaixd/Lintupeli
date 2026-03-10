@@ -234,16 +234,19 @@ def FetchScoresData():
 
 #games = FetchGameData(currentUserId)
 #ChooseGame(games)
-"""
+
 username, passwordHash = GetLoginCredentials()
 
 if(username != "" and passwordHash !=""):
     print("filler")
+    sql = "SELECT password_hash, player_id from user where username = %s"
+    cursor = connection.cursor()
+    cursor.execute(sql)
     #laita tänne, että tarkistaa löytyykö tuolla nimellä tietokannasta user ja passwordHash ja sitten
     #tarkista onko stored passwordHash sama kuin tietokannan passwordHash
 else:
     CreateUserOrLogin()
-"""
+
 """
 Game taululle:
 values = {"location":location,
