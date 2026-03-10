@@ -68,7 +68,6 @@ def main():
 
     while winCondition is False:
         Clear()
-        print(Database.currentGameId)
         if notMoved >= 3:
             LoseGame(1)
         print(f"Current airport: {Database.FetchAirportName(
