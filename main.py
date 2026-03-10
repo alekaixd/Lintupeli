@@ -50,13 +50,13 @@ def main():
     savedGame = Database.LoadGame()
     if savedGame:
         # Load data from saved game
-        currentGameId = Database.SetCurrentGameId()
         currentAirport = savedGame[0]
         energy = savedGame[1]
         maxEnergy = savedGame[2]
         birdName = savedGame[3]
         score = savedGame[4]
         Database.UpdateGameStatus(currentGameId, "ongoing")
+        currentGameId = Database.SetCurrentGameId()
     else:
         # Start new game
         bird = Player.choose_bird()
