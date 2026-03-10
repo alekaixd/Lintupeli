@@ -9,6 +9,7 @@ import os
 This script is used for the main game loop logic
 """
 
+currentGameId = None
 
 def main():
     # starting point
@@ -37,6 +38,8 @@ def main():
     # check if winter is coming
     # check for win condition
     # loop back
+
+    global currentGameId
 
     Clear()
     Player.newgame_intro()
@@ -183,6 +186,8 @@ def CalculateDistance(icao1: str, icao2: str):
 
 
 def LoseGame(reason: int):
+    global currentGameId
+    Database.DeleteGame(currentGameId)
     if reason == 0:
         print("You ran out of energy and you fell from the sky :(")
     elif reason == 1:
