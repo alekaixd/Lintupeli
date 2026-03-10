@@ -235,6 +235,9 @@ def LoadGame():
             ChooseGame(savedGames)
         else:
             return
+    else:
+        print("No saved games found!")
+        return
 
 
 def FetchGameData(userId, status="ongoing"):
