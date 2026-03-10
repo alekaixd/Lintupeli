@@ -171,6 +171,7 @@ def main():
                     Database.InsertGame(currentAirport, energy, maxEnergy, birdName, int(score), gameId=currentGameId)
                     return
                 elif saveAction == "n":
+                    Database.DeleteGame(currentGameId)
                     return
         else:
             print("Wrong input")
