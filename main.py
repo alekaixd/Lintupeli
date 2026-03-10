@@ -172,6 +172,7 @@ def main():
                     return
                 elif saveAction == "n":
                     if(savedGame):
+                        Database.UpdateGameStatus(currentGameId, "saved")
                         return
                     else:
                         Database.DeleteGame(currentGameId)
