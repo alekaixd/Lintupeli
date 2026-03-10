@@ -218,7 +218,7 @@ def InsertGame (location, currentEnergy, maxEnergy, speciesName, score, status="
 
 def SetCurrentGameId():
     global currentGameId
-    sql = f"SELECT id FROM game WHERE player_id = {currentUserId} AND status = 'ongoing' LIMIT 1"
+    sql = f"SELECT id FROM game WHERE player_id = {currentUserId} AND status = 'saved' LIMIT 1"
     cursor = connection.cursor()
     cursor.execute(sql)
     result = cursor.fetchone()
