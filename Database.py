@@ -8,6 +8,7 @@ currentUserId = None
 open("loginCredentials.txt", "a").close()
 open("databaseLoginCredentials.txt", "a").close()
 
+
 def SaveLoginCredentials(username, passwordHash):
     with open("loginCredentials.txt", "w") as f:
         f.write(f"username = {username}\n")
@@ -31,6 +32,7 @@ def GetLoginCredentials():
 
     return (username, passwordHash)
 
+
 def SaveDatabaseLoginCredentials(user, password):
     with open("databaseLoginCredentials.txt", "w") as f:
         f.write(f"username = {user}\n")
@@ -47,12 +49,12 @@ def GetDatabaseLoginCredentials():
             key = key.strip()
             value = value.strip()
 
-            if(key == "username"):
+            if (key == "username"):
                 username = value
-            if(key == "password"):
+            if (key == "password"):
                 password = value
 
-    return(username, password)
+    return (username, password)
 
 
 # creates SQL connection and saves it to global variable connection
@@ -79,8 +81,8 @@ def SqlConnect(user, password):
 def Connect():
     dbUsername, dbPassword = GetDatabaseLoginCredentials()
 
-    if(dbUsername != "" and dbPassword != ""):
-        if(SqlConnect(dbUsername, dbPassword) is True):
+    if (dbUsername != "" and dbPassword != ""):
+        if (SqlConnect(dbUsername, dbPassword) is True):
             print("Database auto login successfull!")
             return
     else:
@@ -93,6 +95,7 @@ def Connect():
                     break
             else:
                 print("Anna nimi ja salasana!")
+
 
 def FetchLocation(ICAO):
     sql = f"SELECT latitude_deg, longitude_deg FROM airport WHERE ident=%s"
@@ -176,6 +179,7 @@ def CreateUserOrLogin():
 
 # Inserts data into the given table from the given dictionary
 
+
 def InsertUser(username, password):
     cursor = connection.cursor()
 
@@ -203,24 +207,30 @@ def InsertScore(totalScore, daysSurvived, gameId):
     else:
         print("No score inserted")
 
-def InsertGame (location, currentEnergy, maxEnergy, speciesName, score, status="saved", gameId=None):
-    #muista player id
+
+def InsertGame(location, currentEnergy, maxEnergy, speciesName, score, status="saved", gameId=None):
+    # muista player id
     playerId = currentUserId
+    cursor = connection.cursor()
 
     if gameId is None:
         sql = f"INSERT INTO game (location, current_energy, max_energy, species_name, player_id, status, score) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-        cursor.execute(sql,(location, currentEnergy, maxEnergy, speciesName, playerId, status, score))
+        cursor.execute(sql, (location, currentEnergy, maxEnergy,
+                       speciesName, playerId, status, score))
         connection.commit()
         print("New game saved!")
     else:
         sql = f"UPDATE game SET location = %s, current_energy = %s, max_energy = %s, species_name = %s, status = %s, score = %s WHERE id = %s"
 
-        cursor.execute(sql,(location, currentEnergy, maxEnergy, speciesName, status, score, gameId))
+        cursor.execute(sql, (location, currentEnergy, maxEnergy,
+                       speciesName, status, score, gameId))
         connection.commit()
         print("Game saved!")
 
+
 def SetCurrentGameId():
-    sql = f"SELECT id FROM game WHERE player_id = {currentUserId} AND status = 'ongoing' LIMIT 1"
+    sql = f"SELECT id FROM game WHERE player_id = {
+        currentUserId} AND status = 'ongoing' LIMIT 1"
     cursor = connection.cursor()
     cursor.execute(sql)
     result = cursor.fetchone()
@@ -249,6 +259,7 @@ def LoadGame():
         print("No saved games found!")
         return None
 
+
 def ChooseGame(games):
     print("Select a game: ")
     i = 1
@@ -276,6 +287,7 @@ def FetchGameData(userId, status="saved"):
     games = cursor.fetchall()
     return games
 
+
 def FetchScoresData():
     sql = f"SELECT scores.total_score, user.username, game.species_name FROM user JOIN scores ON scores.player_id = user.player_id JOIN game ON game.id = scores.game_id AND game.player_id = user.player_id WHERE game.status = 'completed' ORDER BY scores.total_score DESC LIMIT 10"
     cursor = connection.cursor()
@@ -283,11 +295,13 @@ def FetchScoresData():
     result = cursor.fetchall()
     return result
 
+
 def DeleteGame(currentGameId):
     sql = f"DELETE FROM game WHERE id = {currentGameId}"
     cursor = connection.cursor()
     cursor.execute(sql)
     connection.commit()
+
 
 def UpdateGameStatus(gameId, status):
     sql = "UPDATE game SET status = %s WHERE id = %s"
@@ -295,6 +309,7 @@ def UpdateGameStatus(gameId, status):
     cursor.execute(sql, (status, gameId))
     connection.commit()
     print(f"Game {gameId} status updated to {status}!")
+
 
 Connect()
 

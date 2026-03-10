@@ -11,6 +11,7 @@ This script is used for the main game loop logic
 
 currentGameId = None
 
+
 def main():
     # starting point
 
@@ -64,10 +65,12 @@ def main():
         maxEnergy = energy
         score = 0
         currentAirport = MigrationScript.GetFirstPort()
-        Database.InsertGame(currentAirport, energy, maxEnergy, birdName, score, "ongoing")
+        Database.InsertGame(currentAirport, energy,
+                            maxEnergy, birdName, score, "ongoing")
         currentGameId = Database.SetCurrentGameId()
 
     notMoved = 0
+    combo = 0
 
     while winCondition is False:
         Clear()
@@ -135,7 +138,8 @@ def main():
                 if energy <= 0:
                     LoseGame(0)
 
-                score += energyUsed
+                combo += 1
+                score = CalculateFlightScore(combo, energyUsed)
 
                 # if player flew
                 print(f"\nflap flap... The {birdName} soars the skies towards {
@@ -146,13 +150,15 @@ def main():
                 notMoved = 0
 
             else:  # if player at the end
+                Clear()
                 input("You migrated successfully!!1!1 :D")
                 Database.UpdateGameStatus(currentGameId, "completed")
                 Database.InsertScore(int(score), None, currentGameId)
                 winCondition = True
 
-                act = int(input("Would you like to see the leaderboard (1) or play again (2)?: "))
-                if(act == 1):
+                act = int(
+                    input("Would you like to see the leaderboard (1) or play again (2)?: "))
+                if (act == 1):
                     leaderboard = Database.FetchScoresData()
                     print("\n==== Leaderboard ====")
 
@@ -161,34 +167,39 @@ def main():
                     else:
                         for row in leaderboard:
                             score, username, speciesName = row
-                            print(f"Species: {speciesName}, user: {username}, score: {score}\n")
-                if(act == 2):
+                            print(f"Species: {speciesName}, user: {
+                                  username}, score: {score}\n")
+                if (act == 2):
+                    main()  # :D
                     return
-
 
         elif action == "eat" or action == "e":
             addEnergy = Player.bird_food_find(birdName)
             maxEnergy += addEnergy
             energy += addEnergy
             notMoved += 1
+            combo = 0
         elif action == "sleep" or action == "s":
             energy = maxEnergy
             input("You slept well and restored all your energy!\n(Enter to continue)")
             notMoved += 1
+            combo = 0
         elif action == "chirp" or action == "c":
             score += 50
             input(
                 "chirp chirp!\nLocal residents are happy! + 50 points :D\n(Enter to continue)")
             notMoved += 1
+            combo = 0
         elif action == "quit" or action == "q":
             saveAction = ""
             while saveAction != "y" or saveAction != "n":
                 saveAction = input("Save game (y/n)? ")
                 if saveAction == "y":
-                    Database.InsertGame(currentAirport, energy, maxEnergy, birdName, int(score), gameId=currentGameId)
+                    Database.InsertGame(currentAirport, energy, maxEnergy, birdName, int(
+                        score), gameId=currentGameId)
                     return
                 elif saveAction == "n":
-                    if(savedGame):
+                    if (savedGame):
                         Database.UpdateGameStatus(currentGameId, "saved")
                         return
                     else:
@@ -224,8 +235,8 @@ def Clear():  # if for some reason clear command is different
         os.system('cls')
 
 
-def CalculateFlightScore(combo: int):
-    return
+def CalculateFlightScore(combo: int, energyUsed: int):
+    return energyUsed * combo * 2
 
 
 main()
