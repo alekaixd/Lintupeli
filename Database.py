@@ -111,6 +111,7 @@ def FetchAirportName(ICAO):
     cursor = connection.cursor()
     cursor.execute(sql)
     result = cursor.fetchall()
+
     if (result):
         return result[0][0]
     else:
@@ -218,7 +219,7 @@ def InsertGame (location, currentEnergy, maxEnergy, speciesName, status, score, 
 
 def SetCurrentGameId():
     global currentGameId
-    sql = f"SELECT id FROM game WHERE player_id = {currentUserId} AND status = 'ongoing'"
+    sql = f"SELECT id FROM game WHERE player_id = {currentUserId} AND status = 'ongoing' LIMIT 1"
     cursor = connection.cursor()
     cursor.execute(sql)
     result = cursor.fetchone()
