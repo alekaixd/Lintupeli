@@ -4,7 +4,6 @@ import bcrypt
 
 connection = None
 currentUserId = None
-currentGameId = None
 
 open("loginCredentials.txt", "a").close()
 open("databaseLoginCredentials.txt", "a").close()
@@ -223,8 +222,7 @@ def SetCurrentGameId():
     cursor = connection.cursor()
     cursor.execute(sql)
     result = cursor.fetchone()
-    print(result)
-    currentGameId = result[0]
+    return result[0]
 
 
 def LoadGame():
