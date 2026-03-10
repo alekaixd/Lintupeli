@@ -222,7 +222,12 @@ def SetCurrentGameId():
     cursor = connection.cursor()
     cursor.execute(sql)
     result = cursor.fetchone()
-    return result[0]
+
+    if result is None:
+        print("No saved game found")
+        return None
+    else:
+        return result[0]
 
 
 def LoadGame():
