@@ -1,36 +1,4 @@
-# HERE ARE ALL THE FUNCTIONS AND OTHER STUFF FOR THE PLAYERS STATS
-
-# starting point
-
-# "login" user
-#   ask for screen name
-# ask for save
-#   load game/new game
-#       new game => ask for bird name
-#       load game => select your bird
-# start game
-# print info
-# choose action
-#   fly
-#       choose how long to fly (longer distance => more risk)
-#   eat (raises max energy)
-#   rest (restores all energy)
-#   quit game
-#       save game
-# day cycle
-#   change location
-#   change weather
-#   change energy
-#   change date (optional)
-# check if energy is depleted
-# check if winter is coming
-# check for win condition
-# loop back
-
 import random
-
-# Player Actions
-
 
 def newgame_intro():
     print("Welcome to Bird Game!")
@@ -39,13 +7,11 @@ def newgame_intro():
     print("Manage your energy wisely to reach your safe destination.")
     input("\nPress 'Enter' to get started!\n")
 
-
 def move_forward(energy):
     loss = random.randint(5, 10)
     energy -= loss
     print(f"You moved forward and lost {loss} energy.")
     return energy
-
 
 def eat():
     gain = random.randint(4, 12)
@@ -53,44 +19,62 @@ def eat():
     input("(Enter to continue)")
     return gain
 
-
-# Check game status
-
 def check_energy(energy):
     if energy <= 0:
         print("Your no energy left. You lost the game!")
         return False
     return True
 
-
-# Game loop
-"""
-def game():
-    playing = True
-
-    print("Game started! Your energy:", energy)
-
-    while playing:
-        print("\nChoose action:")
-        print("1 - Move Forward")
-        print("2 - Rest")
-        print("3 - Eat")
-
-        choice = input("Type here--> ")
-
-        if choice == "1":
-            energy = move_forward(energy)
-        elif choice == "2":
-            energy = rest(energy)
-        elif choice == "3":
-            energy = eat(energy)
+def choose_bird():
+    birds = {
+        "1": {"name": "Eagle", "energy": 50, "difficulty": "Easy"},
+        "2": {"name": "Raven", "energy": 45, "difficulty": "Easy"},
+        "3": {"name": "Sparrow", "energy": 40, "difficulty": "Medium"},
+        "4": {"name": "Hawk", "energy": 35, "difficulty": "Medium"},
+        "5": {"name": "Owl", "energy": 30, "difficulty": "Hard"},
+        "6": {"name": "Pigeon", "energy": 32, "difficulty": "Hard"}
+    }
+        
+    print("\nChoose your bird:")
+    for key, bird in birds.items():
+        print(f"{key} - {bird['name']} (Starting energy: {bird['energy']})")
+        
+    while True:
+        choice = input("\nEnter number (1-5): ")
+        if choice in birds:
+            selected = birds[choice]
+            print(f"\nYou chose {selected['name']}! Difficulty: {selected['difficulty']}")
+            return selected["name"], selected["energy"] #tämä palauttaa linnun nimen ja energia määrän pelaajan valinnan mukaan :)
         else:
-            print("Invalid choice.")
-            continue
+            print("Invalid choice. Please enter 1-5.")
 
-        print("Current energy:", energy)
-        playing = check_energy(energy)
-"""
+def eat(bird_name):
+    foods = {
+        "worm": 8,
+        "seeds": 5,
+        "berry": 5,
+        "insect": 8,
+        "grain": 2,
+        "fish": 10
+        }
+                    
+    food = random.choice(list(foods.keys()))
+    energy_gain = foods[food]
+    print(f"{bird_name} found a {food}! You received {energy_gain} energy points.")
+    input("(Enter to continue)")
+    return energy_gain
 
-# --- Start Game ---
-# game()
+def choose_weather():
+    weathers = {
+        "storm": {"multiplier": 1.4, "description": "A terrible storm is approaching!"},
+        "rain": {"multiplier": 1.2, "description": "It's raining heavily."},
+        "windy": {"multiplier": 1.1, "description": "Strong winds are blowing."},
+        "sunny": {"multiplier": 1.0, "description": "Beautiful sunny weather!"}
+    }
+        
+    weather = random.choice(list(weathers.keys()))
+    weather_data = weathers[weather]
+    print(f"\nWeather: {weather_data['description']}")
+    print(f"Energy loss multiplier: {weather_data['multiplier']}x")
+        
+    return weather_data["multiplier"] #Tämä palauttaa sen pistemäärittäjä kertoimen :)
