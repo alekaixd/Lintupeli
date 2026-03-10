@@ -1,11 +1,32 @@
 # ONLY DATABASE FETCHES HERE
 import mysql.connector
-from mysql.connector import Error
 import bcrypt
 
 connection = None
 currentUserId = None
 currentGameId = None
+
+open("loginCredentials.txt", "a").close()
+
+def SaveLoginCredentials(username, passwordHash):
+    with open("loginCredentials.txt", "w") as f:
+        f.write(f"username = {username}\n")
+        f.write(f"password hash = {passwordHash.decode()}\n")
+
+def GetLoginCredentials():
+    username = ""
+    passwordHash = ""
+
+    with open("loginCredentials.txt", "r") as f:
+        for line in f:
+            key, values = line.strip().split("=")
+
+            if(key == "username"):
+                username = values
+            if(key == "password hash"):
+                passwordHash = values
+
+    return (username, passwordHash)
 
 # creates SQL connection and saves it to global variable connection
 def SqlConnect(user, password):
@@ -93,6 +114,9 @@ def CreateUserOrLogin():
             if (bcrypt.checkpw(password.encode(), storedHash)):
                 print("Login successful")
                 currentUserId = result[1]
+
+                SaveLoginCredentials(username, storedHash)
+
                 return()
             else:
                 print("Wrong password or username")
@@ -210,8 +234,16 @@ def FetchScoresData():
 
 #games = FetchGameData(currentUserId)
 #ChooseGame(games)
-CreateUserOrLogin()
+"""
+username, passwordHash = GetLoginCredentials()
 
+if(username != "" and passwordHash !=""):
+    print("filler")
+    #laita tänne, että tarkistaa löytyykö tuolla nimellä tietokannasta user ja passwordHash ja sitten
+    #tarkista onko stored passwordHash sama kuin tietokannan passwordHash
+else:
+    CreateUserOrLogin()
+"""
 """
 Game taululle:
 values = {"location":location,
