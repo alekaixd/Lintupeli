@@ -18,7 +18,8 @@ def idle():
 
 def fly():
     fg = "\u001b[38;5;159m"
-    PlayAnimation(ReadFile("./Animations/fly.txt"), 0.6, 2, fg)
+    bg = "\u001b[48;5;235m"
+    PlayAnimation(ReadFile("./Animations/fly.txt"), 0.3, 2, fg, bg)
 
 
 def ReadFile(fileName: str):

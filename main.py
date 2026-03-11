@@ -48,12 +48,12 @@ def main():
         Animations.Clear()
         if notMoved >= 3:
             LoseGame(1)
-        print(f"Current airport: {Database.FetchAirportName(
+        print(f"\u001b[36mCurrent airport: {Database.FetchAirportName(
             currentAirport)}")
-        print(f"Energy: {energy:.0f}/{maxEnergy}")
-        print(f"Score: {int(score)}")
+        print(f"\u001b[33mEnergy: {energy:.0f}/{maxEnergy}")
+        print(f"\u001b[35mScore: {int(score)}")
         action = input(
-            "Write action (fly, chirp, eat, sleep or quit): ")
+            "\u001b[39mWrite action (fly, chirp, eat, sleep or quit): ")
 
         if action == "fly" or action == "f":
             flights = MigrationScript.GetNextPort(currentAirport)
@@ -111,14 +111,16 @@ def main():
                     LoseGame(0)
 
                 combo += 1
-                score = CalculateFlightScore(combo, energyUsed)
+                score += CalculateFlightScore(combo, energyUsed)
 
                 # if player flew
                 print(f"\nflap flap... The {birdName} soars the skies towards {
                       Database.FetchAirportName(chosenDestination)}.")
                 print(f"You lost {energyUsed:.0f} energy\n")
                 Animations.fly()
-                input("(Enter to continue)")
+
+                input("\u001b[32m" +
+                      "\n('Enter' to continue)\n" + "\u001b[39m")
                 currentAirport = chosenDestination
                 notMoved = 0
 
@@ -154,13 +156,17 @@ def main():
             combo = 0
         elif action == "sleep" or action == "s":
             energy = maxEnergy
-            input("You slept well and restored all your energy!\n(Enter to continue)")
+            input("You slept well and restored all your energy!")
+            input("\u001b[32m" +
+                  "\n('Enter' to continue)\n" + "\u001b[39m")
             notMoved += 1
             combo = 0
         elif action == "chirp" or action == "c":
             score += 50
             input(
-                "chirp chirp!\nLocal residents are happy! + 50 points :D\n(Enter to continue)")
+                "chirp chirp!\nLocal residents are happy! + 50 points :D")
+            input("\u001b[32m" +
+                  "\n('Enter' to continue)\n" + "\u001b[39m")
             notMoved += 1
             combo = 0
         elif action == "quit" or action == "q":
