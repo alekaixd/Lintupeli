@@ -1,50 +1,3 @@
-# this script gets called when the player wants location data
-# need a list of all map objects.
-# map object includes data of the airport
-#   - airport code
-#   - current weather
-#   - food amount
-
-# class map gets data from the airport database before the game starts
-# data is stored in an ordered list
-#
-# we also need a functon that will take 2 airport codes and calculate their distance
-
-# also we need to somehow store a list of airport codes
-# external readable file?
-
-# storing the distance between 2 airports is probably dumb so i think i will just calculate them when needed
-
-# example of how the cold value will increase overtime
-
-#   2, 1, 0, 0, 0, ...
-#   3, 2, 1, 0, 0, ...
-#   4, 3, 2, 1, 0, ...
-
-# also the next airport has a random weather modifier like hail, thunderstorm or sunny.
-# when choosing where to go you are given a description of the weather for each route.
-
-# submaps?
-# maybe there will be a crossroad where you can choose the fast and trecherous route or
-# the safe and longer route.
-
-# map 1 => map 2 or map 3
-# map 2 => map 4
-# map 3 => map 4
-# map 4 => finish
-
-# maps = [(map 1), (map2, map3), (map 4)]
-
-#           - - -
-# - - - - <       > - - - finish
-#           - - -
-
-# basic version where there cant be crossroads inside crossroads
-# will probably rework
-
-# so basically all this is useless cuz i need to use a graph data structure
-# it needs to be a directed wheighted connected graph
-
 import json
 
 
@@ -106,12 +59,12 @@ def ReadMapJson(path: str):
             for i, k in enumerate(arr):
                 g.AddVertexData(i, k)
                 for edge in arr[k]["edges"]:
-                    g.AddEdge(i, edge, 1)  # weight to be added
+                    g.AddEdge(i, edge, 1)  # weight can be ignored
     return
 
 
 def InitMap():
-    ReadMapJson("FinlandToItaly.json")
+    ReadMapJson("./maps/FinlandToItaly.json")
 
 
 # InitMap()
