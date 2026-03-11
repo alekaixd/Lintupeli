@@ -182,7 +182,7 @@ def main():
                         Database.UpdateGameStatus(currentGameId, "saved")
                         return
                     else:
-                        Database.DeleteGame(currentGameId)
+                        Database.UpdateGameStatus(currentGameId, "deleted")
                         return
         else:
             print("Wrong input")
@@ -199,7 +199,7 @@ def CalculateDistance(icao1: str, icao2: str):
 
 def LoseGame(reason: int):
     global currentGameId
-    Database.DeleteGame(currentGameId)
+    Database.UpdateGameStatus(currentGameId, "deleted")
     if reason == 0:
         print("You ran out of energy and you fell from the sky :(")
     elif reason == 1:
