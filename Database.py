@@ -310,8 +310,6 @@ def UpdateGameStatus(gameId, status):
     cursor = connection.cursor()
     cursor.execute(sql, (status, gameId))
     connection.commit()
-    print(f"Game {gameId} status updated to {status}!")
-
 
 Connect()
 
