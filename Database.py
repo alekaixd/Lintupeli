@@ -305,14 +305,6 @@ def FetchScoresData():
     result = cursor.fetchall()
     return result
 
-
-def DeleteGame(currentGameId):
-    sql = f"DELETE FROM game WHERE id = {currentGameId}"
-    cursor = connection.cursor()
-    cursor.execute(sql)
-    connection.commit()
-
-
 def UpdateGameStatus(gameId, status):
     sql = "UPDATE game SET status = %s WHERE id = %s"
     cursor = connection.cursor()
