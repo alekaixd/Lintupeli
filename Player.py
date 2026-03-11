@@ -5,7 +5,7 @@ def newgame_intro():
     title = open("./Animations/title.txt").read()
     print("\u001b[48;5;210m\u001b[38;5;235m" + title + "\u001b[49m\u001b[39m")
     print("=" * 119)
-    print("Welcome to migration migrane!!\n")
+    print("Welcome to Migration Migraine!!\n")
     print("\nYou are a bird trying to survive the deadly winter.")
     print("Manage your energy wisely to reach your vacation home for the winter.")
     print("Eat food to raise your maximum energy and sleep to recharge all of your energy.")
