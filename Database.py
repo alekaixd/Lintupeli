@@ -5,6 +5,7 @@ import bcrypt
 connection = None
 currentUserId = None
 
+# Luodaan tyhjät tiedostot, jos niitä ei ole olemassa
 open("loginCredentials.txt", "a").close()
 open("databaseLoginCredentials.txt", "a").close()
 
@@ -96,7 +97,7 @@ def Connect():
             else:
                 print("Anna nimi ja salasana!")
 
-
+# Hakee lentokentän koordinaatit ICAO-koodin perusteella
 def FetchLocation(ICAO):
     sql = f"SELECT latitude_deg, longitude_deg FROM airport WHERE ident=%s"
     cursor = connection.cursor()
@@ -119,7 +120,7 @@ def FetchAirportName(ICAO):
     else:
         return print("No airport name for that ICAO")
 
-
+# Funktio, joka joko kirjauttaa käyttäjän tai luo uuden
 def CreateUserOrLogin():
     global currentUserId
 
@@ -217,7 +218,7 @@ def InsertScore(totalScore, daysSurvived, gameId):
     else:
         print("No score inserted")
 
-
+# Tallentaa uuden pelin tai päivittää olemassa olevan pelin tilan
 def InsertGame(location, currentEnergy, maxEnergy, speciesName, score, status="saved", gameId=None):
     # muista player id
     playerId = currentUserId
@@ -313,6 +314,7 @@ def UpdateGameStatus(gameId, status):
 
 Connect()
 
+# Yritetään automaattista kirjautumista tallennetuilla tunnuksilla
 username, passwordHash = GetLoginCredentials()
 
 if (username != "" and passwordHash != ""):
