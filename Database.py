@@ -177,7 +177,6 @@ def CreateUserOrLogin():
 
                 if result:
                     currentUserId = result[0]
-                    print("User created successfully!")
                     break
                 else:
                     print("Error: Could not fetch new user ID.")
