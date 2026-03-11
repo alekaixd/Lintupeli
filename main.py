@@ -2,8 +2,7 @@ import Database
 import MigrationScript
 import Player
 from geopy import distance
-import platform
-import os
+import Animations
 
 """
 This script is used for the main game loop logic
@@ -13,36 +12,9 @@ currentGameId = None
 
 
 def main():
-    # starting point
-
-    # "login" user
-    #   ask for screen name
-    # ask for save
-    #   load game/new game
-    #       new game => ask for bird name
-    #       load game => select your bird
-    # start game
-    # print info
-    # choose action
-    #   fly
-    #       choose how long to fly (longer distance => more risk)
-    #   eat (raises max energy)
-    #   rest (restores all energy)
-    #   quit game
-    #       save game
-    # day cycle
-    #   change location
-    #   change weather
-    #   change energy
-    #   change date (optional)
-    # check if energy is depleted
-    # check if winter is coming
-    # check for win condition
-    # loop back
-
     global currentGameId
 
-    Clear()
+    Animations.Clear()
     Player.newgame_intro()
 
     MigrationScript.InitMap()
@@ -73,7 +45,7 @@ def main():
     combo = 0
 
     while winCondition is False:
-        Clear()
+        Animations.Clear()
         if notMoved >= 3:
             LoseGame(1)
         print(f"Current airport: {Database.FetchAirportName(
@@ -144,13 +116,14 @@ def main():
                 # if player flew
                 print(f"\nflap flap... The {birdName} soars the skies towards {
                       Database.FetchAirportName(chosenDestination)}.")
-                print(f"You lost {energyUsed:.0f} energy")
+                print(f"You lost {energyUsed:.0f} energy\n")
+                Animations.fly()
                 input("(Enter to continue)")
                 currentAirport = chosenDestination
                 notMoved = 0
 
             else:  # if player at the end
-                Clear()
+                Animations.Clear()
                 input("You migrated successfully!!1!1 :D")
                 Database.UpdateGameStatus(currentGameId, "completed")
                 Database.InsertScore(int(score), None, currentGameId)
@@ -226,13 +199,6 @@ def LoseGame(reason: int):
     elif reason == 1:
         print("The cold caught up to you. You lose D:")
     quit()
-
-
-def Clear():  # if for some reason clear command is different
-    if platform.system() == "Linux":
-        os.system('clear')
-    elif platform.system() == "Windows":
-        os.system('cls')
 
 
 def CalculateFlightScore(combo: int, energyUsed: int):
