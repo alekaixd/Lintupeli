@@ -169,8 +169,21 @@ def CreateUserOrLogin():
 
             try:
                 InsertUser(username, password)
-                print("User created successfully!")
-                break
+
+                sql = "SELECT player_id FROM user WHERE username = %s"
+                cursor = connection.cursor()
+                cursor.execute(sql, (username,))
+                result = cursor.fetchone()
+
+                global currentUserId
+
+                if result:
+                    currentUserId = result[0]
+                    print("User created successfully!")
+                    break
+                else:
+                    print("Error: Could not fetch new user ID.")
+                    continue
             except Exception:
                 print("Username already exists! Please choose another.")
                 continue
