@@ -175,8 +175,6 @@ def CreateUserOrLogin():
                 cursor.execute(sql, (username,))
                 result = cursor.fetchone()
 
-                global currentUserId
-
                 if result:
                     currentUserId = result[0]
                     print("User created successfully!")
