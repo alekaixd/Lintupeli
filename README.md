@@ -4,7 +4,7 @@ You are a bird migrating away from the deadly cold. Manage your energy and fly f
 
 Dependencies: mysql-connector-python, geopy, bcrypt
 
-Installing database for this project:
+Setting up the database for this project:
 
 Open mariadb and execute the following commands:
 ```sql
@@ -15,5 +15,7 @@ source full\path\to\yoursql\bird_game.sql;
 
 Give rights for your mariadb user:
 ```sql
-GRANT SELECT, INSERT, UPDATE, DELETE ON bird_game.* TO username@localhost;
+GRANT SELECT, INSERT, UPDATE ON bird_game.* TO username@localhost;
 ```
+
+Run main.py with python to play the game
