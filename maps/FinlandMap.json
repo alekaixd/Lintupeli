@@ -1,0 +1,70 @@
+{
+	"map": [
+		{
+			"EFIV": {
+				"name": "Ivalo",
+				"edges": [
+					2,
+					3
+				]
+			},
+			"EFET": {
+				"name": "Enontekiö",
+				"edges": [
+					2
+				]
+			},
+			"EFRO": {
+				"name": "Rovaniemi",
+				"edges": [
+					3,
+					4
+				]
+			},
+			"EFKT": {
+				"name": "Kittilä",
+				"edges": [
+					2,
+					4
+				]
+			},
+			"EFOU": {
+				"name": "Oulu",
+				"edges": [
+					5,
+					6,
+					7
+				]
+			},
+			"EFVA": {
+				"name": "Vaasa",
+				"edges": [
+					8,
+					9
+				]
+			},
+			"EFKU": {
+				"name": "Kuopio",
+				"edges": [
+					9
+				]
+			},
+			"EFJY": {
+				"name": "Jyväskylä",
+				"edges": [
+					9
+				]
+			},
+			"EFTU": {
+				"name": "Turku",
+				"edges": [
+					9
+				]
+			},
+			"EFHK": {
+				"name": "Helsinki-Vantaa",
+				"edges": []
+			}
+		}
+	]
+}

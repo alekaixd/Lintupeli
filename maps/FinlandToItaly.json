@@ -1,0 +1,131 @@
+{
+	"map": [
+		{
+			"EFIV": {
+				"name": "Ivalo",
+				"edges": [
+					1
+				]
+			},
+			"EFRO": {
+				"name": "Rovaniemi",
+				"edges": [
+					2
+				]
+			},
+			"EFOU": {
+				"name": "Oulu",
+				"edges": [
+					3,
+					4
+				]
+			},
+			"EFVA": {
+				"name": "Vaasa",
+				"edges": [
+					5
+				]
+			},
+			"EFTP": {
+				"name": "Tampere",
+				"edges": [
+					5,
+					6
+				]
+			},
+			"EFHK": {
+				"name": "Helsinki",
+				"edges": [
+					7
+				]
+			},
+			"EETN": {
+				"name": "Tallinn",
+				"edges": [
+					8
+				]
+			},
+			"EVRA": {
+				"name": "Riga",
+				"edges": [
+					9
+				]
+			},
+			"EYVI": {
+				"name": "Vilnius",
+				"edges": [
+					10
+				]
+			},
+			"EPWA": {
+				"name": "Warsaw",
+				"edges": [
+					11,
+					12
+				]
+			},
+			"EPKK": {
+				"name": "Krakow",
+				"edges": [
+					13
+				]
+			},
+			"EPWR": {
+				"name": "Wroclaw",
+				"edges": [
+					13,
+					14
+				]
+			},
+			"LOWW": {
+				"name": "Vienna",
+				"edges": [
+					15
+				]
+			},
+			"LKPR": {
+				"name": "Prague",
+				"edges": [
+					14,
+					15
+				]
+			},
+			"EDDM": {
+				"name": "Munich",
+				"edges": [
+					16,
+					17
+				]
+			},
+			"LOWI": {
+				"name": "Innsbruck",
+				"edges": [
+					17,
+					18
+				]
+			},
+			"LIPE": {
+				"name": "Bologna",
+				"edges": [
+					19
+				]
+			},
+			"LIPZ": {
+				"name": "Venice",
+				"edges": [
+					19
+				]
+			},
+			"LIML": {
+				"name": "Milan Linate",
+				"edges": [
+					19
+				]
+			},
+			"LIRF": {
+				"name": "Rome Fiumicino",
+				"edges": []
+			}
+		}
+	]
+}
