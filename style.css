@@ -1,0 +1,27 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+#main_content {
+    display:flex;
+}
+
+#map {
+    width: 75%;
+    height: 120vh;
+}
+
+#control_panel {
+    width: 25%;
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#control_panel button {
+    width: 100px;
+}
