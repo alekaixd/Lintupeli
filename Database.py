@@ -1,6 +1,8 @@
 # ONLY DATABASE FETCHES HERE
 import mysql.connector
 import bcrypt
+from flask import FLASK, request, jsonify
+import json
 
 connection = None
 currentUserId = None
@@ -120,73 +122,80 @@ def FetchAirportName(ICAO):
     else:
         return print("No airport name for that ICAO")
 
-# Funktio, joka joko kirjauttaa käyttäjän tai luo uuden
-def CreateUserOrLogin():
+app = FLASK(__name__)
+@app.route('/login', methods = ['POST'])
+def login():
+    data = request.get_json()
+    result = data['value']
+    return jsonify(result=result)
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
+# Funktio, joka joko kirjauttaa käyttäjän tai luo uuden käyttäjän (ottaa javascript napista arvona joko 1 tai 2 (API?))
+def CreateUserOrLogin(value):
     global currentUserId
 
-    while True:
+    if (value == "login"):
+
+        sql1 = "SELECT username FROM user"
+        cursor1 = connection.cursor()
+        cursor1.execute(sql1)
+        result1 = cursor1.fetchall
+
+        #printtaa nämä result arvot sinne javascriptiin nappeina (innerHTML += <button> user </button>
+        for user in result1:
+            print(user)
+
+        #add to the webpage input fields for username and password
+        password = input("Password: ")
+
+        #tähän joku selected username apin kautta?
+
+        sql = "SELECT password_hash, player_id FROM user WHERE username = %s"
+        cursor = connection.cursor()
+        cursor.execute(sql, (username,))
+        result = cursor.fetchone()
+
+        if (result is None):
+            print("User not found! Try again!")
+
+        storedHash = result[0].strip().encode()
+
+        if (bcrypt.checkpw(password.encode(), storedHash)):
+            print("Login successful")
+            currentUserId = result[1]
+            return ()
+        else:
+            print("Wrong password or username")
+
+    elif (value == "createUser"):
+        username = input("Username: ")
+        password = input("Password: ")
+
+        if (username == ""):
+            print("Give a username!")
+
+        if (password == ""):
+            print("Give a password!")
+
         try:
-            command = int(
-                input("Would you like to login (1) or create a new user (2): "))
-        except ValueError:
-            print("Incorrect input!")
-            continue
+            InsertUser(username, password)
 
-        if (command == 1):
-            username = input("Username: ")
-            password = input("Password: ")
-
-            sql = "SELECT password_hash, player_id FROM user WHERE username = %s"
+            sql = "SELECT player_id FROM user WHERE username = %s"
             cursor = connection.cursor()
             cursor.execute(sql, (username,))
             result = cursor.fetchone()
 
-            if (result is None):
-                print("User not found! Try again!")
-                continue
-
-            storedHash = result[0].strip().encode()
-
-            if (bcrypt.checkpw(password.encode(), storedHash)):
-                print("Login successful")
-                currentUserId = result[1]
-
-                SaveLoginCredentials(username, storedHash)
-
-                return ()
+            if result:
+                currentUserId = result[0]
             else:
-                print("Wrong password or username")
-
-        elif (command == 2):
-            username = input("Username: ")
-            password = input("Password: ")
-
-            if (username == ""):
-                print("Give a username!")
-                continue
-            if (password == ""):
-                print("Give a password!")
-                continue
-
-            try:
-                InsertUser(username, password)
-
-                sql = "SELECT player_id FROM user WHERE username = %s"
-                cursor = connection.cursor()
-                cursor.execute(sql, (username,))
-                result = cursor.fetchone()
-
-                if result:
-                    currentUserId = result[0]
-                    break
-                else:
-                    print("Error: Could not fetch new user ID.")
-                    continue
-            except Exception:
-                print("Username already exists! Please choose another.")
-                continue
-        else:
-            print("Incorrect input")
+                print("Error: Could not fetch new user ID.")
+        except Exception:
+            print("Username already exists! Please choose another.")
+    else:
+        print("Incorrect input")
 
 # Inserts data into the given table from the given dictionary
 
