@@ -21,16 +21,57 @@
     <div id="main_content">
       <div id="map"></div>
       <div id="control_panel">
-      <button>Click Me</button>
+        <button id="nextBtn">Next location</button>
       </div>
     </div>
     <script>
-      var map = L.map('map').setView([0, 0], 1);
 
-      L.tileLayer('https://api.maptiler.com/maps/hybrid-v4/256/{z}/{x}/{y}.png?key=hgRLL8HKqMgdmq7CmhzW', {
-        attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
-      }).addTo(map);
-      var marker = L.marker([51.5, -0.09]).addTo(map);
+      //mapbox
+      var map = L.map("map").setView([0, 0], 1);
+
+      L.tileLayer(
+        "https://api.maptiler.com/maps/hybrid-v4/256/{z}/{x}/{y}.png?key=hgRLL8HKqMgdmq7CmhzW",
+        {
+          attribution:
+            '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>',
+        },
+      ).addTo(map);
+
+      const locations = [
+        { lat: 40.7128, lng: -74.006 }, // New York
+        { lat: 34.0522, lng: -118.2437 }, // Los Angeles
+        { lat: 51.5074, lng: -0.1278 }, // London
+        { lat: 48.8566, lng: 2.3522 }, // Paris
+        { lat: 35.6762, lng: 139.6503 }, // Tokyo
+        { lat: -33.8688, lng: 151.2093 }, // Sydney
+        { lat: 55.7558, lng: 37.6173 }, // Moscow
+        { lat: 19.4326, lng: -99.1332 }, // Mexico City
+        { lat: 39.9042, lng: 116.4074 }, // Beijing
+        { lat: -23.5505, lng: -46.6333 }, // São Paulo
+      ];
+
+      let currentIndex = 0;
+      var marker = L.marker([locations[currentIndex].lat, locations[currentIndex].lng]).addTo(map);
+
+      // Function to handle button click
+      function selectNextLocation() {
+        if (currentIndex < locations.length - 1) {
+          currentIndex++;
+          const location = locations[currentIndex];
+          map.setView([location.lat, location.lng], 10);
+          marker.setLatLng([location.lat, location.lng]);
+        } else {
+          alert("You reached the end.");
+        }
+      }
+
+      // Assuming there's a button in index.html with id 'nextBtn'
+      // In index.html: <button id="nextBtn">Next Location</button>
+      // Then in script.js, after defining the function:
+      document
+        .getElementById("nextBtn")
+        .addEventListener("click", selectNextLocation);
     </script>
   </body>
 </html>
+
