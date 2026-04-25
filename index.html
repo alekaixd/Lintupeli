@@ -18,11 +18,47 @@
     <title>Document</title>
   </head>
   <body>
+    <div id="header">
+      <header>
+        <h1>Bird Game 🪽</h1>
+        <nav>
+          <ul>
+            <li><p>User: NoScope360EZ</p></li>
+            <li><button id="infoBtn">Info</button></li>
+            <li><button>Exit→</button></li>
+          </ul>
+        </nav>
+      </header>
     <div id="main_content">
       <div id="map"></div>
       <div id="control_panel">
-        <button id="nextBtn">Next location</button>
+        <div id="statsInfo">
+          <h2>Stats info:</h2>
+          <h3>Multiplier: 2.0x</h3>
+          <p>Total Points: 0</p>
+          <p>Energy: 50/50</p>
+          <p>Options left: 3/3</p>
+          <p></p>
+        </div>
+        <div id="allBtn">
+        <button id="flyBtn">Fly</button>
+        <button id="eatBtn">Eat</button>
+        <button id="sleepBtn">Sleep</button>
+        <button id="chripBtn">Chrip</button>
       </div>
+      <div id="flyOptions" class="hidden">
+        <button id="option1Btn">Option 1</button>
+        <button id="option2Btn">Option 2</button>
+      </div>
+      <div id="messageContainer" class="message hidden"></div>
+      <div id="infoOverlay" class="hidden info-overlay">
+        <div class="info-box">
+          <h2>Information</h2>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum vestibulum. Cras venenatis euismod malesuada.</p>
+          <button id="closeInfoBtn">Close</button>
+        </div>
+      </div>
+    </div>
     </div>
     <script>
 
@@ -53,7 +89,12 @@
       let currentIndex = 0;
       var marker = L.marker([locations[currentIndex].lat, locations[currentIndex].lng]).addTo(map);
 
-      // Function to handle button click
+      const allButtons = document.getElementById("allBtn");
+      const flyOptions = document.getElementById("flyOptions");
+      const flyBtn = document.getElementById("flyBtn");
+      const option1Btn = document.getElementById("option1Btn");
+      const option2Btn = document.getElementById("option2Btn");
+
       function selectNextLocation() {
         if (currentIndex < locations.length - 1) {
           currentIndex++;
@@ -65,13 +106,79 @@
         }
       }
 
-      // Assuming there's a button in index.html with id 'nextBtn'
-      // In index.html: <button id="nextBtn">Next Location</button>
-      // Then in script.js, after defining the function:
-      document
-        .getElementById("nextBtn")
-        .addEventListener("click", selectNextLocation);
+      function showFlyOptions() {
+        allButtons.classList.add("hidden");
+        flyOptions.classList.remove("hidden");
+        showMessage("You choose option \"Fly\"");
+      }
+
+      function restoreButtons() {
+        flyOptions.classList.add("hidden");
+        allButtons.classList.remove("hidden");
+      }
+
+      function showMessage(text) {
+        const messageContainer = document.getElementById("messageContainer");
+        messageContainer.textContent = text;
+        window.clearTimeout(messageContainer.dataset.timeout);
+
+        // Reset the element to full opacity immediately before fading again.
+        messageContainer.style.transition = "none";
+        messageContainer.classList.remove("hidden", "fade-out", "visible-message");
+        messageContainer.offsetWidth;
+        messageContainer.classList.add("visible-message");
+        messageContainer.style.transition = "opacity 10s linear";
+
+        requestAnimationFrame(() => {
+          messageContainer.classList.remove("visible-message");
+          messageContainer.classList.add("fade-out");
+        });
+
+        messageContainer.dataset.timeout = window.setTimeout(() => {
+          messageContainer.classList.add("hidden");
+          messageContainer.classList.remove("fade-out", "visible-message");
+          messageContainer.style.transition = "opacity 10s linear";
+        }, 10000);
+      }
+
+      function onControlClick(buttonName, action) {
+        showMessage(`You choose option \"${buttonName}\"`);
+        if (action) action();
+      }
+
+      flyBtn.addEventListener("click", () => onControlClick("Fly", showFlyOptions));
+      option1Btn.addEventListener("click", () => {
+        onControlClick("Option 1", () => {
+          selectNextLocation();
+          restoreButtons();
+        });
+      });
+      option2Btn.addEventListener("click", () => {
+        onControlClick("Option 2", () => {
+          selectNextLocation();
+          restoreButtons();
+        });
+      });
+      document.getElementById("eatBtn").addEventListener("click", () => onControlClick("Eat"));
+      document.getElementById("sleepBtn").addEventListener("click", () => onControlClick("Sleep"));
+      document.getElementById("chripBtn").addEventListener("click", () => onControlClick("Chrip"));
+
+      const infoBtn = document.getElementById("infoBtn");
+      const infoOverlay = document.getElementById("infoOverlay");
+      const closeInfoBtn = document.getElementById("closeInfoBtn");
+
+      function openInfo() {
+        infoOverlay.classList.remove("hidden");
+      }
+
+      function closeInfo() {
+        infoOverlay.classList.add("hidden");
+      }
+
+      infoBtn.addEventListener("click", openInfo);
+      closeInfoBtn.addEventListener("click", closeInfo);
     </script>
+    </div>
   </body>
 </html>
 
