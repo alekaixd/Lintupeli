@@ -148,12 +148,11 @@ header ul li button:hover {
 .info-box button {
   width: 100%;
   padding: 12px 0;
-  border: none;
+  border: solid;
   border-radius: 8px;
-  background: #ff7a18;
-  color: #ffffff;
   font-size: 1rem;
   cursor: pointer;
+
 }
 
 .info-box button:hover {
