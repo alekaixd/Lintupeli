@@ -1,6 +1,6 @@
-const buttons = document.getElementsByClassName("login");
-buttons.addEventListener('click', function(){
-    value = buttons.valueOf();
+const button = document.getElementsById("send");
+button.addEventListener('click', function(){
+    value = button.valueOf();
 
     function sendData() {
         $.ajax({

@@ -122,7 +122,7 @@ def FetchAirportName(ICAO):
     else:
         return print("No airport name for that ICAO")
 
-app = FLASK(__name__)
+app = Flask(__name__)
 @app.route('/login', methods = ['POST'])
 def login():
     data = request.get_json()
@@ -132,6 +132,7 @@ def login():
 if __name__ == '__main__':
     app.run(debug=True)
 
+value = app(__name__)
 
 # Funktio, joka joko kirjauttaa käyttäjän tai luo uuden käyttäjän (ottaa javascript napista arvona joko 1 tai 2 (API?))
 def CreateUserOrLogin(value):
@@ -196,6 +197,8 @@ def CreateUserOrLogin(value):
             print("Username already exists! Please choose another.")
     else:
         print("Incorrect input")
+
+CreateUserOrLogin(value)
 
 # Inserts data into the given table from the given dictionary
 
