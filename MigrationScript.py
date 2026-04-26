@@ -1,4 +1,5 @@
 import json
+from flask import Flask, jsonify, request
 
 
 class Map:  # https://www.w3schools.com/dsa/dsa_data_graphs_implementation.php
@@ -66,6 +67,21 @@ def ReadMapJson(path: str):
 def InitMap():
     ReadMapJson("./maps/FinlandToItaly.json")
 
+
+flightApp = Flask(__name__)
+
+
+@flightApp.route('/map/<ICAO>', methods=['GET'])
+def GetNextMaps(ICAO):
+    InitMap()
+    try:
+        return GetNextPort(ICAO)
+    except Exception as e:
+        return f"invalid ICAO code: {e}"
+
+
+if __name__ == "__main__":
+    flightApp.run(debug=True, port=3000)
 
 # InitMap()
 # print(g.GetIcaoIndex("EGBB"))
