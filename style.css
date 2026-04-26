@@ -1,27 +1,160 @@
 html,
 body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+header ul {
+  display: flex;
+  font-size: 25px;
+  list-style: none;
+  align-items: center;
+}
+header ul li p {
+  padding-right: 50px;
+}
+
+header ul li button {
+  padding-right: 50px;
+  color: #000000;
+  font: inherit;
+  border: none;
+  background-color: transparent;
+  transition:
+    color 0.3s ease-in-out,
+    box-shadow 0.3s ease-in-out;
+  cursor: pointer;
+}
+header ul li button:hover {
+  box-shadow: inset 100px 0 0 0 #54b3d6;
+  color: white;
 }
 
 #main_content {
-    display:flex;
+  display: flex;
+  max-width: 1440px;
+  margin: auto;
+  border-style: solid;
 }
 
 #map {
-    width: 75%;
-    height: 120vh;
+  width: 75%;
+  height: 120vh;
 }
 
 #control_panel {
-    width: 25%;
-    background-color: black;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  width: 25%;
+  background-color: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 #control_panel button {
-    width: 100px;
+  padding-left: 20%;
+  padding-right: 20%;
+  margin-top: 3%;
+  margin-bottom: 3%;
+  align-items: center;
+  font-size: 150%;
+  border-radius: 2px;
+  border-style: solid;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+  text-align: center;
+  width: 80%;
+  margin-left: 10%;
+}
+
+#control_panel button:hover {
+  background-color: #54b3d6;
+}
+
+#statsInfo {
+  color: white;
+  text-align: left;
+  width: 100%;
+  padding-left: 10%;
+}
+
+.hidden {
+  display: none;
+}
+
+#messageContainer {
+  color: #00ddff;
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin: 20px 10%;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-align: center;
+  box-shadow: 0 12px 24px #00ddff;
+  opacity: 1;
+  transition: opacity 10s linear;
+}
+
+#messageContainer.visible-message {
+  opacity: 1;
+}
+
+#messageContainer.fade-out {
+  opacity: 0;
+}
+
+.info-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  background: rgba(0, 0, 0, 0.45);
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  z-index: 1000;
+}
+
+.info-overlay.hidden {
+  display: none;
+}
+
+.info-box {
+  background: rgba(10, 10, 20, 0.95);
+  border-radius: 16px;
+  padding: 24px;
+  max-width: 420px;
+  width: 100%;
+  color: #ffffff;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+}
+
+.info-box h2 {
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+.info-box p {
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.info-box button {
+  width: 100%;
+  padding: 12px 0;
+  border: solid;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+
+}
+
+.info-box button:hover {
+  background: #ff9b4a;
 }
