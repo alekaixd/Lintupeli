@@ -68,20 +68,5 @@ def InitMap():
     ReadMapJson("./maps/FinlandToItaly.json")
 
 
-flightApp = Flask(__name__)
-
-
-@flightApp.route('/map/<ICAO>', methods=['GET'])
-def GetNextMaps(ICAO):
-    InitMap()
-    try:
-        return GetNextPort(ICAO)
-    except Exception as e:
-        return f"invalid ICAO code: {e}"
-
-
-if __name__ == "__main__":
-    flightApp.run(debug=True, port=3000)
-
 # InitMap()
 # print(g.GetIcaoIndex("EGBB"))

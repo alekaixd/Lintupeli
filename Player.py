@@ -22,9 +22,12 @@ def move_forward(energy):
 
 def eat():
     gain = random.randint(4, 12)
-    print(f"You ate some food and gained {gain} max energy.")
-    input("(Enter to continue)")
     return gain
+
+
+def chirp():
+    gainedScore = random.randint(50, 75)
+    return gainedScore
 
 
 def check_energy(energy):
