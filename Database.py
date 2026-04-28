@@ -1,7 +1,7 @@
 # ONLY DATABASE FETCHES HERE
 import mysql.connector
 import bcrypt
-from flask import FLASK, request, jsonify
+from flask import Flask, request, jsonify, send_file
 import json
 
 connection = None
@@ -125,14 +125,33 @@ def FetchAirportName(ICAO):
 app = Flask(__name__)
 @app.route('/login', methods = ['POST'])
 def login():
+
     data = request.get_json()
-    result = data['value']
-    return jsonify(result=result)
 
-if __name__ == '__main__':
+    username = data["username"]
+    password = data["password"]
+
+    sql = "SELECT password_hash FROM user WHERE username=%s"
+    cursor = connection.cursor()
+    cursor.execute(sql, (username,))
+    result = cursor.fetchone()
+
+    if result is None:
+        return (jsonify(success = False))
+
+    storedHash = result[0].strip().encode()
+
+    if bcrypt.checkpw(password.encode(), storedHash):
+        return(jsonify(success = True))
+    else:
+        return(jsonify(success = False))
+
+@app.route("/")
+def login_page():
+    return send_file("login.html")
+
+if __name__ == "__main__":
     app.run(debug=True)
-
-value = app(__name__)
 
 # Funktio, joka joko kirjauttaa käyttäjän tai luo uuden käyttäjän (ottaa javascript napista arvona joko 1 tai 2 (API?))
 def CreateUserOrLogin(value):
@@ -197,8 +216,6 @@ def CreateUserOrLogin(value):
             print("Username already exists! Please choose another.")
     else:
         print("Incorrect input")
-
-CreateUserOrLogin(value)
 
 # Inserts data into the given table from the given dictionary
 

@@ -1,19 +1,29 @@
-const button = document.getElementsById("send");
+const button = document.getElementById("send");
 button.addEventListener('click', function(){
-    value = button.valueOf();
+    let username = document.getElementById("username").value;
+    let password = document.getElementById("password").value;
 
-    function sendData() {
-        $.ajax({
-            url: '/login',
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({'value': value}),
-            success: function(response) {
-                document.getElementById('output').innerHTML = response.result;
-            },
-            error: function(error){
-                console.log(error);
-            }
-        });
-    }
+    fetch("/login", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            username: username,
+            password: password
+        })
+
+    })
+
+    .then(response => response.json())
+
+    .then(data => {
+        if(data.success){
+            window.location.href = "/";
+        } else {
+            document.getElementById("complaint").innerText = "wrong username or password";
+        }
+    })
+
+    .catch(error => console.error(error))
 })
