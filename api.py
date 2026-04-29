@@ -1,9 +1,13 @@
 from flask import Flask
+from flask_cors import CORS
 import MigrationScript
 import Player
-import Database
+# import Database
 
 app = Flask(__name__)
+
+CORS(app)
+
 MigrationScript.InitMap()
 
 
@@ -25,6 +29,7 @@ def Chirp():
     return {"addedScore": Player.chirp()}
 
 
+"""
 @app.route('/fly/<ICAO>', methods=['GET'])
 def FlyToLocation(ICAO):
     try:
@@ -37,7 +42,7 @@ def FlyToLocation(ICAO):
         return locationData
     except Exception as e:
         return f"invalid ICAO code: {e}"
-
+"""
 
 if __name__ == "__main__":
     app.run(debug=True, port=3000)

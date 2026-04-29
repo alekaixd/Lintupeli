@@ -1,184 +1,64 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-      crossorigin=""
-    />
-    <script
-      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-      crossorigin=""
-    ></script>
-    <link rel="stylesheet" href="style.css" />
-    <title>Document</title>
-  </head>
-  <body>
-    <div id="header">
-      <header>
-        <h1>Bird Game 🪽</h1>
-        <nav>
-          <ul>
-            <li><p>User: NoScope360EZ</p></li>
-            <li><button id="infoBtn">Info</button></li>
-            <li><button>Exit→</button></li>
-          </ul>
-        </nav>
-      </header>
-    <div id="main_content">
-      <div id="map"></div>
-      <div id="control_panel">
-        <div id="statsInfo">
-          <h2>Stats info:</h2>
-          <h3>Multiplier: 2.0x</h3>
-          <p>Total Points: 0</p>
-          <p>Energy: 50/50</p>
-          <p>Options left: 3/3</p>
-          <p></p>
-        </div>
-        <div id="allBtn">
-        <button id="flyBtn">Fly</button>
-        <button id="eatBtn">Eat</button>
-        <button id="sleepBtn">Sleep</button>
-        <button id="chripBtn">Chirp</button>
-      </div>
-      <div id="flyOptions" class="hidden">
-        <button id="option1Btn">Option 1</button>
-        <button id="option2Btn">Option 2</button>
-      </div>
-      <div id="messageContainer" class="message hidden"></div>
-      <div id="infoOverlay" class="hidden info-overlay">
-        <div class="info-box">
-          <h2>Information</h2>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum vestibulum. Cras venenatis euismod malesuada.</p>
-          <button id="closeInfoBtn">Close</button>
-        </div>
-      </div>
-    </div>
-    </div>
-    <script>
 
-      //mapbox
-      var map = L.map("map").setView([0, 0], 1);
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+		integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+		integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+	<link rel="stylesheet" href="style.css" />
+	<title>Document</title>
+</head>
 
-      L.tileLayer(
-        "https://api.maptiler.com/maps/hybrid-v4/256/{z}/{x}/{y}.png?key=hgRLL8HKqMgdmq7CmhzW",
-        {
-          attribution:
-            '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>',
-        },
-      ).addTo(map);
+<body>
+	<div id="header">
+		<header>
+			<h1>Bird Game 🪽</h1>
+			<nav>
+				<ul>
+					<li>
+						<p>User: NoScope360EZ</p>
+					</li>
+					<li><button id="infoBtn">Info</button></li>
+					<li><button>Exit→</button></li>
+				</ul>
+			</nav>
+		</header>
+		<div id="main_content">
+			<div id="map"></div>
+			<div id="control_panel">
+				<div id="statsInfo">
+					<h2>Stats info:</h2>
+					<h3>Multiplier: 2.0x</h3>
+					<p>Total Points: 0</p>
+					<p>Energy: 50/50</p>
+					<p>Options left: 3/3</p>
+					<p></p>
+				</div>
+				<div id="allBtn">
+					<button id="flyBtn">Fly</button>
+					<button id="eatBtn">Eat</button>
+					<button id="sleepBtn">Sleep</button>
+					<button id="chripBtn">Chirp</button>
+				</div>
+				<div id="flyOptions" class="hidden">
+				</div>
+				<div id="messageContainer" class="message hidden"></div>
+				<div id="infoOverlay" class="hidden info-overlay">
+					<div class="info-box">
+						<h2>Information</h2>
+						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus
+							lacinia odio vitae vestibulum vestibulum. Cras venenatis euismod
+							malesuada.</p>
+						<button id="closeInfoBtn">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="game.js"></script>
+	</div>
+</body>
 
-      const locations = [
-        { lat: 40.7128, lng: -74.006 }, // New York
-        { lat: 34.0522, lng: -118.2437 }, // Los Angeles
-        { lat: 51.5074, lng: -0.1278 }, // London
-        { lat: 48.8566, lng: 2.3522 }, // Paris
-        { lat: 35.6762, lng: 139.6503 }, // Tokyo
-        { lat: -33.8688, lng: 151.2093 }, // Sydney
-        { lat: 55.7558, lng: 37.6173 }, // Moscow
-        { lat: 19.4326, lng: -99.1332 }, // Mexico City
-        { lat: 39.9042, lng: 116.4074 }, // Beijing
-        { lat: -23.5505, lng: -46.6333 }, // São Paulo
-      ];
-
-      let currentIndex = 0;
-      var marker = L.marker([locations[currentIndex].lat, locations[currentIndex].lng]).addTo(map);
-
-      const allButtons = document.getElementById("allBtn");
-      const flyOptions = document.getElementById("flyOptions");
-      const flyBtn = document.getElementById("flyBtn");
-      const option1Btn = document.getElementById("option1Btn");
-      const option2Btn = document.getElementById("option2Btn");
-
-      function selectNextLocation() {
-        if (currentIndex < locations.length - 1) {
-          currentIndex++;
-          const location = locations[currentIndex];
-          map.setView([location.lat, location.lng], 10);
-          marker.setLatLng([location.lat, location.lng]);
-        } else {
-          alert("You reached the end.");
-        }
-      }
-
-      function showFlyOptions() {
-        allButtons.classList.add("hidden");
-        flyOptions.classList.remove("hidden");
-        showMessage("You choose option \"Fly\"");
-      }
-
-      function restoreButtons() {
-        flyOptions.classList.add("hidden");
-        allButtons.classList.remove("hidden");
-      }
-
-      function showMessage(text) {
-        const messageContainer = document.getElementById("messageContainer");
-        messageContainer.textContent = text;
-        window.clearTimeout(messageContainer.dataset.timeout);
-
-        // Reset the element to full opacity immediately before fading again.
-        messageContainer.style.transition = "none";
-        messageContainer.classList.remove("hidden", "fade-out", "visible-message");
-        messageContainer.offsetWidth;
-        messageContainer.classList.add("visible-message");
-        messageContainer.style.transition = "opacity 10s linear";
-
-        requestAnimationFrame(() => {
-          messageContainer.classList.remove("visible-message");
-          messageContainer.classList.add("fade-out");
-        });
-
-        messageContainer.dataset.timeout = window.setTimeout(() => {
-          messageContainer.classList.add("hidden");
-          messageContainer.classList.remove("fade-out", "visible-message");
-          messageContainer.style.transition = "opacity 10s linear";
-        }, 10000);
-      }
-
-      function onControlClick(buttonName, action) {
-        showMessage(`You choose option \"${buttonName}\"`);
-        if (action) action();
-      }
-
-      flyBtn.addEventListener("click", () => onControlClick("Fly", showFlyOptions));
-      option1Btn.addEventListener("click", () => {
-        onControlClick("Option 1", () => {
-          selectNextLocation();
-          restoreButtons();
-        });
-      });
-      option2Btn.addEventListener("click", () => {
-        onControlClick("Option 2", () => {
-          selectNextLocation();
-          restoreButtons();
-        });
-      });
-      document.getElementById("eatBtn").addEventListener("click", () => onControlClick("Eat"));
-      document.getElementById("sleepBtn").addEventListener("click", () => onControlClick("Sleep"));
-      document.getElementById("chripBtn").addEventListener("click", () => onControlClick("Chirp"));
-
-      const infoBtn = document.getElementById("infoBtn");
-      const infoOverlay = document.getElementById("infoOverlay");
-      const closeInfoBtn = document.getElementById("closeInfoBtn");
-
-      function openInfo() {
-        infoOverlay.classList.remove("hidden");
-      }
-
-      function closeInfo() {
-        infoOverlay.classList.add("hidden");
-      }
-
-      infoBtn.addEventListener("click", openInfo);
-      closeInfoBtn.addEventListener("click", closeInfo);
-    </script>
-    </div>
-  </body>
 </html>
-
