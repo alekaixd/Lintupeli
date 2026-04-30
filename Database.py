@@ -154,6 +154,7 @@ if __name__ == "__main__":
     app.run(debug=True)
 
 # Funktio, joka joko kirjauttaa käyttäjän tai luo uuden käyttäjän (ottaa javascript napista arvona joko 1 tai 2 (API?))
+"""
 def CreateUserOrLogin(value):
     global currentUserId
 
@@ -216,6 +217,8 @@ def CreateUserOrLogin(value):
             print("Username already exists! Please choose another.")
     else:
         print("Incorrect input")
+        
+"""
 
 # Inserts data into the given table from the given dictionary
 
