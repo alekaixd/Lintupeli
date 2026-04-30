@@ -153,7 +153,7 @@ def login_page():
     return send_file("index.html")
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=3000)
 
 # Funktio, joka joko kirjauttaa käyttäjän tai luo uuden käyttäjän (ottaa javascript napista arvona joko 1 tai 2 (API?))
 """
