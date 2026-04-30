@@ -2,6 +2,7 @@
 import mysql.connector
 import bcrypt
 from flask import Flask, request, jsonify, send_file
+from flask_cors import CORS
 import json
 
 connection = None
@@ -123,6 +124,8 @@ def FetchAirportName(ICAO):
         return print("No airport name for that ICAO")
 
 app = Flask(__name__)
+
+CORS(app)
 @app.route('/login', methods = ['POST'])
 def login():
 
@@ -148,7 +151,7 @@ def login():
 
 @app.route("/")
 def login_page():
-    return send_file("login.html")
+    return send_file("index.html")
 
 if __name__ == "__main__":
     app.run(debug=True)

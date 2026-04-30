@@ -3,7 +3,7 @@ button.addEventListener('click', function(){
     let username = document.getElementById("username").value;
     let password = document.getElementById("password").value;
 
-    fetch("/login", {
+    fetch("http://127.0.0.1:5000/login", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
