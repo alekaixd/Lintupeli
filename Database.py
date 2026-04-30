@@ -103,7 +103,6 @@ def Connect():
 # Hakee lentokentän koordinaatit ICAO-koodin perusteella
 def FetchLocation(ICAO):
     sql = f"SELECT latitude_deg, longitude_deg FROM airport WHERE ident=%s"
-    connection = mysql.connector.connect()
     cursor = connection.cursor()
     cursor.execute(sql, (ICAO,))
     result = cursor.fetchall()
