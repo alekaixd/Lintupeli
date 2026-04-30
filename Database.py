@@ -122,7 +122,6 @@ def FetchAirportName(ICAO):
         return result[0][0]
     else:
         return print("No airport name for that ICAO")
-
 app = Flask(__name__)
 
 CORS(app)
@@ -142,7 +141,7 @@ def login():
     if result is None:
         return (jsonify(success = False))
 
-    storedHash = result[0].strip().encode()
+    storedHash = result[0].encode()
 
     if bcrypt.checkpw(password.encode(), storedHash):
         return(jsonify(success = True))
