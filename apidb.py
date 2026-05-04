@@ -156,3 +156,8 @@ def Difficulty():
 
     return jsonify(success=True)
 
+
+@user_bp.route("/logout", methods=["POST"])
+def Logout():
+    session.clear()
+    return jsonify(success=True)

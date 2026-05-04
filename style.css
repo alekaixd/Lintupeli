@@ -225,3 +225,7 @@ header h1 {
 .button:active {
   background-color: #ff9b4a;
 }
+
+#text {
+  text-align: center;
+}
