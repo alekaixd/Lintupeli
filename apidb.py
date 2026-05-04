@@ -78,7 +78,7 @@ def login():
     username = data["username"]
     password = data["password"]
 
-    sql = "SELECT password_hash FROM user WHERE username=%s"
+    sql = "SELECT player_id, password_hash FROM user WHERE username=%s"
     db = get_db()
     cursor = db.cursor()
     cursor.execute(sql, (username,))
@@ -87,10 +87,11 @@ def login():
     if result is None:
         return (jsonify(success=False))
 
-    storedHash = result[0].encode()
+    user_id = result[0]
+    storedHash = result[1].encode()
 
     if bcrypt.checkpw(password.encode(), storedHash):
-        session["user_id"] = result[0]
+        session["user_id"] = user_id
         return (jsonify(success=True))
     else:
         return (jsonify(success=False))
@@ -104,33 +105,31 @@ def createUser():
     username = data["username"]
     password = data["password"]
 
-    if (not username):
+    if not username:
         return jsonify(success=False, message="Give a username!")
 
-    if (not password):
+    if not password:
         return jsonify(success=False, message="Give a password!")
 
-    try:
+    db = get_db()
+    cursor = db.cursor()
 
-        import bcrypt
-        hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
-
-        InsertUser(username, hashed_password)
-
-        sql = "SELECT player_id FROM user WHERE username = %s"
-        db = get_db()
-        cursor = db.cursor()
-        cursor.execute(sql, (username,))
-        result = cursor.fetchone()
-
-        if result:
-            session["user_id"] = result[0]
-            return jsonify(success=True)
-        else:
-            return jsonify(success=False, message="Could not fetch user ID")
-
-    except Exception as e:
+    sql = "SELECT 1 FROM user WHERE username = %s"
+    cursor.execute(sql, (username,))
+    if cursor.fetchone():
         return jsonify(success=False, message="Username already exists")
+
+    InsertUser(username, password)
+
+    sql = "SELECT player_id FROM user WHERE username = %s"
+    cursor.execute(sql, (username,))
+    result = cursor.fetchone()
+
+    if result:
+        session["user_id"] = result[0]
+        return jsonify(success=True)
+
+    return jsonify(success=False, message="Could not fetch user ID")
 
 
 def InsertUser(username, password):
