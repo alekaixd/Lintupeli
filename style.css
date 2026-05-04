@@ -201,3 +201,11 @@ header h1 {
   flex-direction: row;
   justify-content: space-around;
 }
+
+.bird:hover {
+  box-shadow:0 8px 16px 0 rgba(0,0,0,0.6)
+}
+
+.bird:active {
+  background-color: #ff9b4a;
+}
