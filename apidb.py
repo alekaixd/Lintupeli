@@ -142,3 +142,17 @@ def InsertUser(username, password):
     except mysql.connector.IntegrityError:
         db.rollback()
         return False
+
+@user_bp.route('/difficulty', methods=['POST'])
+def Difficulty():
+
+    data = request.get_json()
+
+    name = data["name"]
+    maxEnergy = data["maxEnergy"]
+
+    session["bird_name"] = name
+    session["max_energy"] = maxEnergy
+
+
+

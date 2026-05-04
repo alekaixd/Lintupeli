@@ -209,3 +209,19 @@ header h1 {
 .bird:active {
   background-color: #ff9b4a;
 }
+
+.button{
+  border: 2px solid black;
+  margin: 20px 200px 20px 200px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.button:hover{
+  box-shadow:0 8px 16px 0 rgba(0,0,0,0.6)
+}
+
+.button:active {
+  background-color: #ff9b4a;
+}
