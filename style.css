@@ -183,3 +183,13 @@ header h1 {
 .info-box button:hover {
   background: #ff9b4a;
 }
+
+.container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.user_padding{
+  margin-top: 20px;
+}
