@@ -1,4 +1,5 @@
 import mysql.connector
+import bcrypt
 from flask import Flask, request, jsonify, send_file, g
 from flask_cors import CORS
 
@@ -24,6 +25,8 @@ def GetDatabaseLoginCredentials():
 usr, passwd = GetDatabaseLoginCredentials()
 
 app = Flask(__name__)
+
+CORS(app)
 
 pool = mysql.connector.pooling.MySQLConnectionPool(
     pool_size=5,
@@ -67,6 +70,29 @@ def FlyToLocation(ICAO):
         return locationData
     except Exception as e:
         return f"invalid ICAO code: {e}"
+@app.route('/login', methods=['POST'])
+def login():
+
+    data = request.get_json()
+
+    username = data["username"]
+    password = data["password"]
+
+    sql = "SELECT password_hash FROM user WHERE username=%s"
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute(sql, (username,))
+    result = cursor.fetchone()
+
+    if result is None:
+        return (jsonify(success=False))
+
+    storedHash = result[0].encode()
+
+    if bcrypt.checkpw(password.encode(), storedHash):
+        return (jsonify(success=True))
+    else:
+        return (jsonify(success=False))
 
 
 if __name__ == "__main__":
