@@ -18,7 +18,7 @@ function login() {
 
         .then(data => {
             if (data.success) {
-                window.location.href = "difficulty_choosing.html";
+                window.location.href = "newOrOldGame.html";
             } else {
                 document.getElementById("complaint").innerText = "wrong username or password";
             }
