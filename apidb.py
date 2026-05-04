@@ -92,8 +92,3 @@ def login():
         return (jsonify(success=True))
     else:
         return (jsonify(success=False))
-
-
-@user_bp.route("/")
-def login_page():
-    return send_file("index.html")
