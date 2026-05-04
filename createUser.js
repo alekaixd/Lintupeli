@@ -20,7 +20,7 @@ function createUser() {
             if (data.success) {
                 window.location.href = "index.html";
             } else {
-                document.getElementById("complaint").innerText = "wrong username or password";
+                document.getElementById("complaint").innerText = data.message;
             }
         })
 

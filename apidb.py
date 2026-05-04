@@ -109,25 +109,21 @@ def createUser():
     if not password:
         return jsonify(success=False, message="Give a password!")
 
-    db = get_db()
-    cursor = db.cursor()
+    success = InsertUser(username, password)
 
-    sql = "SELECT 1 FROM user WHERE username = %s"
-    cursor.execute(sql, (username,))
-    if cursor.fetchone():
+    if not success:
         return jsonify(success=False, message="Username already exists")
 
-    InsertUser(username, password)
+    db = get_db()
+    cursor = db.cursor()
 
     sql = "SELECT player_id FROM user WHERE username = %s"
     cursor.execute(sql, (username,))
     result = cursor.fetchone()
 
-    if result:
-        session["user_id"] = result[0]
-        return jsonify(success=True)
+    session["user_id"] = result[0]
 
-    return jsonify(success=False, message="Could not fetch user ID")
+    return jsonify(success=True)
 
 
 def InsertUser(username, password):
@@ -138,4 +134,11 @@ def InsertUser(username, password):
     hashedPassword = bcrypt.hashpw(password.encode(), salt)
 
     sql = "INSERT INTO user (username, password_hash) VALUES (%s, %s)"
-    cursor.execute(sql, (username, hashedPassword.decode()))
+    try:
+        cursor.execute(sql, (username, hashedPassword.decode()))
+        db.commit()
+        return True
+
+    except mysql.connector.IntegrityError:
+        db.rollback()
+        return False
