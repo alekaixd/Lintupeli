@@ -71,6 +71,7 @@ header h1 {
 #map {
   width: 75%;
   height: 80vh;
+  background-color: black;
 }
 
 #control_panel {
@@ -79,6 +80,7 @@ header h1 {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  border-left: solid 2px gray;
 }
 
 #control_panel button {
