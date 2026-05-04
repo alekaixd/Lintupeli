@@ -193,3 +193,11 @@ header h1 {
 .user_padding{
   margin-top: 20px;
 }
+
+.bird{
+  border: 2px solid black;
+  margin: 20px 200px 20px 200px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
