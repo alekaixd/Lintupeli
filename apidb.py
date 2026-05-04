@@ -154,5 +154,5 @@ def Difficulty():
     session["bird_name"] = name
     session["max_energy"] = maxEnergy
 
-
+    return jsonify(success=True)
 
