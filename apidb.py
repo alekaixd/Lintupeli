@@ -46,7 +46,7 @@ def teardown_db(exception):
     db = g.pop('db', None)
 
     if db is not None:
-        db.close
+        db.close()
 
 
 @user_bp.route('/fly/<ICAO>', methods=['GET'])
@@ -93,6 +93,7 @@ def login():
     else:
         return (jsonify(success=False))
 
+
 @user_bp.route('/createUser', methods=['POST'])
 def createUser():
 
@@ -101,10 +102,10 @@ def createUser():
     username = data["username"]
     password = data["password"]
 
-    if(not username):
+    if (not username):
         return jsonify(success=False, message="Give a username!")
 
-    if(not password):
+    if (not password):
         return jsonify(success=False, message="Give a password!")
 
     try:
@@ -128,6 +129,7 @@ def createUser():
 
     except Exception as e:
         return jsonify(success=False, message="Username already exists")
+
 
 def InsertUser(username, password):
     db = get_db()
