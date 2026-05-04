@@ -3,8 +3,14 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
-  background: #EFD2B0;
-  background: linear-gradient(90deg, rgba(239, 210, 176, 1) 0%, rgba(224, 181, 121, 1) 50%, rgba(239, 210, 176, 1) 100%);
+  background: #efd2b0;
+  background: linear-gradient(
+    90deg,
+    rgba(239, 210, 176, 1) 0%,
+    rgba(204, 179, 153, 1) 0%,
+    rgba(239, 210, 176, 1) 50%,
+    rgba(234, 216, 177, 1) 100%
+  );
   font-family: "Roboto Condensed", sans-serif;
   font-optical-sizing: auto;
   font-weight: <weight>;
@@ -31,12 +37,12 @@ header ul {
 }
 header ul li p {
   padding-right: 50px;
-  color: #1A3263;
+  color: #1a3263;
 }
 
 header ul li button {
   padding-right: 50px;
-  color: #1A3263;
+  color: #1a3263;
   font: inherit;
   border: none;
   background-color: transparent;
@@ -51,7 +57,8 @@ header ul li button:hover {
 }
 
 header h1 {
-  color: #1A3263;
+  color: #1a3263;
+  font-size: 45px;
 }
 
 #main_content {
@@ -169,7 +176,6 @@ header h1 {
   border-radius: 8px;
   font-size: 1rem;
   cursor: pointer;
-
 }
 
 .info-box button:hover {
