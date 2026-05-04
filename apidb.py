@@ -2,8 +2,6 @@ import mysql.connector
 import bcrypt
 from flask import Flask, request, jsonify, send_file, g, Blueprint, session, current_app
 
-key = current_app.config['SECRET_KEY']
-
 def GetDatabaseLoginCredentials():
     username = ""
     password = ""
