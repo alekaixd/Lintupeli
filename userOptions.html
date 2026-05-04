@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="style.css">
+    <script src="userOptions.js" defer></script>
     <title>Login</title>
 </head>
 <body>
@@ -12,10 +13,10 @@
     </header>
 
     <h1 id="text">Would you like to</h1>
-    <div href="login.html" class="button">
+    <div onclick="selected(this)" data-value="login" class="button">
         <h3>Login</h3>
     </div>
-    <div href="createUser.html" class="button">
+    <div onclick="selected(this)" data-value="create" class="button">
         <h3>Create user</h3>
     </div>
 </body>
