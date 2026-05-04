@@ -94,9 +94,5 @@ def login():
     else:
         return (jsonify(success=False))
 
-@app.route("/")
-def login_page():
-    return send_file("index.html")
-
 if __name__ == "__main__":
     app.run(debug=True, port=3000)
