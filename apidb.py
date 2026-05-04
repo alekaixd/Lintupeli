@@ -1,7 +1,6 @@
 import mysql.connector
 import bcrypt
-from flask import Flask, request, jsonify, send_file, g
-from flask_cors import CORS
+from flask import Flask, request, jsonify, send_file, g, Blueprint
 
 
 def GetDatabaseLoginCredentials():
@@ -24,9 +23,7 @@ def GetDatabaseLoginCredentials():
 
 usr, passwd = GetDatabaseLoginCredentials()
 
-app = Flask(__name__)
-
-CORS(app)
+user_bp = Blueprint('user_bp', __name__)
 
 pool = mysql.connector.pooling.MySQLConnectionPool(
     pool_size=5,
@@ -44,7 +41,7 @@ def get_db():
     return g.db
 
 
-@app.teardown_appcontext
+@user_bp.teardown_app_request
 def teardown_db(exception):
     db = g.pop('db', None)
 
@@ -52,7 +49,7 @@ def teardown_db(exception):
         db.close
 
 
-@app.route('/fly/<ICAO>', methods=['GET'])
+@user_bp.route('/fly/<ICAO>', methods=['GET'])
 def FlyToLocation(ICAO):
     try:
         sql = f"SELECT latitude_deg, longitude_deg FROM airport WHERE ident=%s"
@@ -70,7 +67,9 @@ def FlyToLocation(ICAO):
         return locationData
     except Exception as e:
         return f"invalid ICAO code: {e}"
-@app.route('/login', methods=['POST'])
+
+
+@user_bp.route('/login', methods=['POST'])
 def login():
 
     data = request.get_json()
@@ -94,9 +93,7 @@ def login():
     else:
         return (jsonify(success=False))
 
-@app.route("/")
+
+@user_bp.route("/")
 def login_page():
     return send_file("index.html")
-
-if __name__ == "__main__":
-    app.run(debug=True, port=3000)

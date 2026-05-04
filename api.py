@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_cors import CORS
+from apidb import user_bp
 import MigrationScript
 import Player
 # import Database
@@ -9,6 +10,8 @@ app = Flask(__name__)
 CORS(app)
 
 MigrationScript.InitMap()
+
+app.register_blueprint(user_bp)
 
 
 @app.route('/map/<ICAO>', methods=['GET'])
@@ -28,21 +31,6 @@ def EatFood():
 def Chirp():
     return {"addedScore": Player.chirp()}
 
-
-"""
-@app.route('/fly/<ICAO>', methods=['GET'])
-def FlyToLocation(ICAO):
-    try:
-        pos = Database.FetchLocation(ICAO)
-        locationData = {
-            "ICAO": ICAO,
-            "lon": pos[0],
-            "lat": pos[1]
-        }
-        return locationData
-    except Exception as e:
-        return f"invalid ICAO code: {e}"
-"""
 
 if __name__ == "__main__":
     app.run(debug=True, port=3000)
