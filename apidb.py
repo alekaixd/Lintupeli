@@ -92,3 +92,49 @@ def login():
         return (jsonify(success=True))
     else:
         return (jsonify(success=False))
+
+@user_bp.route('/createUser', methods=['POST'])
+def createUser():
+
+    data = request.get_json()
+
+    username = data["username"]
+    password = data["password"]
+
+    if(not username):
+        return jsonify(success=False, message="Give a username!")
+
+    if(not password):
+        return jsonify(success=False, message="Give a password!")
+
+    try:
+
+        import bcrypt
+        hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+
+        InsertUser(username, hashed_password)
+
+        sql = "SELECT player_id FROM user WHERE username = %s"
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute(sql, (username,))
+        result = cursor.fetchone()
+
+        if result:
+            session["user_id"] = result[0]
+            return jsonify(success=True)
+        else:
+            return jsonify(success=False, message="Could not fetch user ID")
+
+    except Exception as e:
+        return jsonify(success=False, message="Username already exists")
+
+def InsertUser(username, password):
+    db = get_db()
+    cursor = db.cursor()
+
+    salt = bcrypt.gensalt()
+    hashedPassword = bcrypt.hashpw(password.encode(), salt)
+
+    sql = "INSERT INTO user (username, password_hash) VALUES (%s, %s)"
+    cursor.execute(sql, (username, hashedPassword.decode()))
