@@ -3,6 +3,12 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
+  background: #EFD2B0;
+  background: linear-gradient(90deg, rgba(239, 210, 176, 1) 0%, rgba(224, 181, 121, 1) 50%, rgba(239, 210, 176, 1) 100%);
+  font-family: "Roboto Condensed", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: <weight>;
+  font-style: normal;
 }
 header {
   display: flex;
@@ -10,7 +16,11 @@ header {
   justify-content: space-between;
   max-width: 1440px;
   margin: 0 auto;
+}
+
+#header_line {
   border-bottom: 2px solid black;
+  margin-bottom: 15px;
 }
 
 header ul {
@@ -21,11 +31,12 @@ header ul {
 }
 header ul li p {
   padding-right: 50px;
+  color: #1A3263;
 }
 
 header ul li button {
   padding-right: 50px;
-  color: #000000;
+  color: #1A3263;
   font: inherit;
   border: none;
   background-color: transparent;
@@ -35,8 +46,12 @@ header ul li button {
   cursor: pointer;
 }
 header ul li button:hover {
-  box-shadow: inset 100px 0 0 0 #54b3d6;
+  box-shadow: inset 100px 0 0 0 #547792;
   color: white;
+}
+
+header h1 {
+  color: #1A3263;
 }
 
 #main_content {
@@ -76,7 +91,8 @@ header ul li button:hover {
 }
 
 #control_panel button:hover {
-  background-color: #54b3d6;
+  background-color: #547792;
+  color: white;
 }
 
 #statsInfo {
