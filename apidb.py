@@ -166,6 +166,7 @@ def createUser():
     result = cursor.fetchone()
 
     session["user_id"] = result[0]
+    session["username"] = username
 
     return jsonify(success=True)
 
