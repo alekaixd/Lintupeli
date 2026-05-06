@@ -16,7 +16,7 @@ app.register_blueprint(user_bp)
 
 @app.route('/eat', methods=['GET'])
 def EatFood():
-    return {"addedEnergy": Player.eat()}
+    return Player.eat()
 
 
 @app.route('/chirp', methods=['GET'])

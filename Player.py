@@ -20,11 +20,6 @@ def move_forward(energy):
     return energy
 
 
-def eat():
-    gain = random.randint(4, 12)
-    return gain
-
-
 def chirp():
     gainedScore = random.randint(50, 75)
     return gainedScore
@@ -63,7 +58,7 @@ def choose_bird():
             print("Invalid choice. Please enter 1-6.")
 
 
-def bird_food_find(bird_name):
+def eat():
     foods = {
         "a worm": 8,
         "seeds": 5,
@@ -75,10 +70,9 @@ def bird_food_find(bird_name):
 
     food = random.choice(list(foods.keys()))
     energy_gain = foods[food]
-    print(f"The {bird_name} found {food}! You received {
-          energy_gain} max energy.")
-    input("(Enter to continue)")
-    return energy_gain
+    message = f"You found {food}! You received {
+        energy_gain} max energy."
+    return {"addedEnergy": energy_gain, "message": message}
 
 
 def choose_weather():

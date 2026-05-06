@@ -10,16 +10,23 @@ L.tileLayer(
 	},
 ).addTo(map);
 
-var marker
-let currentIcao = "EFIV"
+var marker = L.marker([0, 0]).addTo(map)
 
-let currentIndex = 0;
+let currentIcao = "EFIV"
+let score = 0
+let energy = 50
+let maxEnergy = energy
 
 const allButtons = document.getElementById("allBtn");
 const flyOptions = document.getElementById("flyOptions");
 const flyBtn = document.getElementById("flyBtn");
 const option1Btn = document.getElementById("option1Btn");
 const option2Btn = document.getElementById("option2Btn");
+const usernameText = document.getElementById("user");
+const multiplierText = document.getElementById("mult");
+const scoreText = document.getElementById("score");
+const energyText = document.getElementById("energy");
+const actionText = document.getElementById("actions");
 
 async function SetFirstLocation() {
 	url = "http://127.0.0.1:3000/start";
@@ -143,9 +150,51 @@ option2Btn.addEventListener("click", () => {
 	});
 });
 */
-document.getElementById("eatBtn").addEventListener("click", () => onControlClick("Eat"));
+document.getElementById("eatBtn").addEventListener("click", () => Eat());
 document.getElementById("sleepBtn").addEventListener("click", () => onControlClick("Sleep"));
-document.getElementById("chripBtn").addEventListener("click", () => onControlClick("Chirp"));
+document.getElementById("chripBtn").addEventListener("click", () => Chirp());
+
+async function Chirp() {
+	url = "http://127.0.0.1:3000/chirp";
+	try {
+		const response = await fetch(url);
+		if (!response.ok) {
+			throw new Error("Response status: " + response.status);
+		}
+
+		const result = await response.json();
+		score += result["addedScore"];
+		scoreText.innerHTML = "Score: " + score;
+		onControlClick("Chirp")
+	}
+	catch (error) {
+		console.error(error.message);
+	}
+}
+
+async function Eat() {
+	url = "http://127.0.0.1:3000/eat";
+	try {
+		const response = await fetch(url);
+		if (!response.ok) {
+			throw new Error("Response status: " + response.status);
+		}
+
+		const result = await response.json();
+		maxEnergy += result["addedEnergy"];
+		energy += result["addedEnergy"]
+		energyText.innerHTML = "Energy: " + energy + "/" + maxEnergy;
+		showMessage(result["message"])
+	}
+	catch (error) {
+		console.error(error.message);
+	}
+}
+
+function sleep() {
+	energy = maxEnergy
+	showMessage("You rested well! Energy fully restored")
+}
 
 const infoBtn = document.getElementById("infoBtn");
 const infoOverlay = document.getElementById("infoOverlay");
