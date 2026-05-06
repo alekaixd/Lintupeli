@@ -22,7 +22,7 @@ const flyOptions = document.getElementById("flyOptions");
 const flyBtn = document.getElementById("flyBtn");
 const option1Btn = document.getElementById("option1Btn");
 const option2Btn = document.getElementById("option2Btn");
-const usernameText = document.getElementById("user");
+const usernameText = document.getElementById("username");
 const multiplierText = document.getElementById("mult");
 const scoreText = document.getElementById("score");
 const energyText = document.getElementById("energy");
@@ -37,8 +37,8 @@ async function SetFirstLocation() {
 		}
 
 		const result = await response.json();
-		map.flyTo([result["lat"], result["lon"]], 5);
 		marker.setLatLng([result["lat"], result["lon"]]);
+		map.flyTo([result["lat"], result["lon"]], 5);
 	}
 	catch (error) {
 		console.error(error.message);
@@ -60,9 +60,8 @@ async function selectNextLocation(ICAO) {
 		const result = await response.json();
 		console.log(result["lat"]);
 		console.log(result["lon"]);
-		map.flyTo([result["lat"], result["lon"]], 5);
 		marker.setLatLng([result["lat"], result["lon"]]);
-		map.setZoom(10)
+		map.setView([result["lat"], result["lon"]], 7);
 	}
 	catch (error) {
 		console.error(error.message);
@@ -223,4 +222,4 @@ async function logout() {
 	}
 }
 
-document.getElementById("username").
+document.getElementById("username")
