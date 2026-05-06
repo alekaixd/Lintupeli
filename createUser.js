@@ -7,6 +7,7 @@ function createUser() {
             headers: {
                 "Content-Type": "application/json"
             },
+            credentials: "include",
             body: JSON.stringify({
                 username: username,
                 password: password
@@ -18,7 +19,7 @@ function createUser() {
 
         .then(data => {
             if (data.success) {
-                window.location.href = "index.html";
+                window.location.href = "newOrOldGame.html";
             } else {
                 document.getElementById("complaint").innerText = data.message;
             }

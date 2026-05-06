@@ -222,5 +222,3 @@ async function logout() {
 		window.location.href = "userOptions.html";
 	}
 }
-
-document.getElementById("username").
