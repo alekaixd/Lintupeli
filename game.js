@@ -212,7 +212,7 @@ infoBtn.addEventListener("click", openInfo);
 closeInfoBtn.addEventListener("click", closeInfo);
 
 async function logout() {
-	const response = await fetch("http://127.0.0.1:3000/logout", {
+	const response = await fetch("http://localhost:3000/logout", {
 		method: "POST"
 	});
 
