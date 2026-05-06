@@ -2,6 +2,7 @@ import mysql.connector
 import bcrypt
 from flask import Flask, request, jsonify, send_file, g, Blueprint, session
 import MigrationScript
+from geopy import distance
 
 
 def GetDatabaseLoginCredentials():
@@ -56,21 +57,57 @@ MigrationScript.InitMap()
 @user_bp.route('/fly/<ICAO>', methods=['GET'])
 def FlyToLocation(ICAO):
     try:
+        currentICAO = request.args.get('currentICAO')
+        combo = float(request.args.get('combo'))
         sql = f"SELECT latitude_deg, longitude_deg FROM airport WHERE ident=%s"
         db = get_db()
         cursor = db.cursor()
         cursor.execute(sql, (ICAO,))
         result = cursor.fetchall()
+        if currentICAO != None:
+            dist = round(CalculateDistance(currentICAO, ICAO))
+            energyUsed = round(dist/10)
+            gainedScore = CalculateFlightScore(combo, energyUsed)
+        else:
+            dist = 0
+            energyUsed = 0
+            gainedScore = 0
 
         pos = result[0]
         locationData = {
             "ICAO": ICAO,
             "lat": pos[0],
-            "lon": pos[1]
+            "lon": pos[1],
+            "distance": dist,
+            "energyUsed": energyUsed,
+            "gainedScore": gainedScore
         }
         return locationData
     except Exception as e:
         return f"invalid ICAO code: {e}"
+
+
+def CalculateDistance(icao1: str, icao2: str):
+    i1 = FetchLocation(icao1)
+    i2 = FetchLocation(icao2)
+    dist = distance.distance(i1, i2).km
+    return dist
+
+
+def CalculateFlightScore(combo: int, energyUsed: int):
+    return energyUsed * combo * 2
+
+
+def FetchLocation(ICAO):
+    sql = f"SELECT latitude_deg, longitude_deg FROM airport WHERE ident=%s"
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute(sql, (ICAO,))
+    result = cursor.fetchall()
+    if (result):
+        return result[0]
+    else:
+        return 0
 
 
 @user_bp.route('/start', methods=['GET'])
@@ -79,7 +116,6 @@ def GetFirstICAO():
         port = MigrationScript.GetFirstPort()
         sql = f"SELECT ident, name, latitude_deg, longitude_deg FROM airport WHERE ident='{
             port}'"
-        print(port)
         db = get_db()
         cursor = db.cursor()
         cursor.execute(sql)
@@ -208,6 +244,7 @@ def Logout():
     session.clear()
     return jsonify(success=True)
 
+
 @user_bp.route("/oldGameData")
 def OldGameData():
     userId = session.get("user_id")
@@ -229,6 +266,7 @@ def OldGameData():
         })
 
     return jsonify(result)
+
 
 def FetchGameData(userId, status="saved"):
     db = get_db()
