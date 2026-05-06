@@ -14,8 +14,8 @@ function updateAudioToggleButton() {
   audioToggleBtn.textContent = audioEnabled ? 'Mute Audio' : 'Unmute Audio';
 }
 
-function playSound(audio) {
-  if (!audio || !audioEnabled) return;
+function playSound(audio, force = false) {
+  if (!audio || (!audioEnabled && !force)) return;
   audio.currentTime = 0;
   audio.play().catch(() => {
     // Ignore playback errors from browser autoplay policies.
@@ -23,6 +23,7 @@ function playSound(audio) {
 }
 
 function toggleAudio() {
+  playSound(clickSound, true);
   audioEnabled = !audioEnabled;
   updateAudioToggleButton();
 }
