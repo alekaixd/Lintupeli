@@ -211,7 +211,7 @@ infoBtn.addEventListener("click", openInfo);
 closeInfoBtn.addEventListener("click", closeInfo);
 
 async function logout() {
-	const response = await fetch("http://127.0.0.1:3000/logout", {
+	const response = await fetch("http://localhost:3000/logout", {
 		method: "POST"
 	});
 
@@ -220,6 +220,10 @@ async function logout() {
 	if (data.success) {
 		window.location.href = "userOptions.html";
 	}
+<<<<<<< HEAD
 }
 
 document.getElementById("username")
+=======
+}
+>>>>>>> f0caa2e5fe3fb55fd98d1c41608a8034bd43682b

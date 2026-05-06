@@ -2,11 +2,12 @@ function createUser() {
         let username = document.getElementById("username").value;
         let password = document.getElementById("password").value;
 
-        fetch("http://127.0.0.1:3000/createUser", {
+        fetch("http://localhost:3000/createUser", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
+            credentials: "include",
             body: JSON.stringify({
                 username: username,
                 password: password
@@ -18,7 +19,7 @@ function createUser() {
 
         .then(data => {
             if (data.success) {
-                window.location.href = "index.html";
+                window.location.href = "newOrOldGame.html";
             } else {
                 document.getElementById("complaint").innerText = data.message;
             }

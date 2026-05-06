@@ -207,3 +207,33 @@ def Difficulty():
 def Logout():
     session.clear()
     return jsonify(success=True)
+
+@user_bp.route("/oldGameData")
+def OldGameData():
+    userId = session.get("user_id")
+
+    print("SESSION user_id:", userId)
+
+    games = FetchGameData(userId)
+
+    result = []
+
+    for game in games:
+        result.append({
+            "id": game[0],
+            "location": game[1],
+            "current_energy": game[2],
+            "max_energy": game[3],
+            "species_name": game[4],
+            "score": game[5]
+        })
+
+    return jsonify(result)
+
+def FetchGameData(userId, status="saved"):
+    db = get_db()
+    cursor = db.cursor()
+    sql = "SELECT id, location, current_energy, max_energy, species_name, score FROM game WHERE status=%s AND player_id=%s"
+    cursor.execute(sql, (status, userId))
+    games = cursor.fetchall()
+    return games
