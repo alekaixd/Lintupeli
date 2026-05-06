@@ -16,6 +16,7 @@ let currentIcao = "EFIV"
 let score = 0
 let energy = 50
 let maxEnergy = energy
+let combo = 1
 
 const allButtons = document.getElementById("allBtn");
 const flyOptions = document.getElementById("flyOptions");
@@ -48,9 +49,9 @@ async function SetFirstLocation() {
 SetFirstLocation()
 
 async function selectNextLocation(ICAO) {
-	currentIcao = ICAO;
-	url = "http://127.0.0.1:3000/fly/" + ICAO;
+	url = "http://127.0.0.1:3000/fly/" + ICAO + "?currentICAO=" + currentIcao + "&combo=" + combo;
 	flyOptions.innerHTML = "";
+	currentIcao = ICAO;
 	try {
 		const response = await fetch(url)
 		if (!response.ok) {
@@ -62,6 +63,13 @@ async function selectNextLocation(ICAO) {
 		console.log(result["lon"]);
 		marker.setLatLng([result["lat"], result["lon"]]);
 		map.setView([result["lat"], result["lon"]], 7);
+
+		score += result["gainedScore"];
+		scoreText.innerHTML = "Total Score: " + score;
+		energy -= result["energyUsed"];
+		updateEnergy();
+		combo += 1;
+		multiplierText.innerHTML = "Multiplier: " + combo + "x"
 	}
 	catch (error) {
 		console.error(error.message);
@@ -150,7 +158,7 @@ option2Btn.addEventListener("click", () => {
 });
 */
 document.getElementById("eatBtn").addEventListener("click", () => Eat());
-document.getElementById("sleepBtn").addEventListener("click", () => onControlClick("Sleep"));
+document.getElementById("sleepBtn").addEventListener("click", () => sleep());
 document.getElementById("chripBtn").addEventListener("click", () => Chirp());
 
 async function Chirp() {
@@ -181,9 +189,9 @@ async function Eat() {
 
 		const result = await response.json();
 		maxEnergy += result["addedEnergy"];
-		energy += result["addedEnergy"]
-		energyText.innerHTML = "Energy: " + energy + "/" + maxEnergy;
-		showMessage(result["message"])
+		energy += result["addedEnergy"];
+		updateEnergy();
+		showMessage(result["message"]);
 	}
 	catch (error) {
 		console.error(error.message);
@@ -191,8 +199,9 @@ async function Eat() {
 }
 
 function sleep() {
-	energy = maxEnergy
-	showMessage("You rested well! Energy fully restored")
+	energy = maxEnergy;
+	updateEnergy();
+	showMessage("You rested well! Energy fully restored");
 }
 
 const infoBtn = document.getElementById("infoBtn");
@@ -221,3 +230,8 @@ async function logout() {
 		window.location.href = "userOptions.html";
 	}
 }
+
+function updateEnergy() {
+	energyText.innerHTML = "Energy: " + energy + "/" + maxEnergy;
+}
+
