@@ -10,23 +10,10 @@ L.tileLayer(
 	},
 ).addTo(map);
 
-const locations = [
-	{ lat: 40.7128, lng: -74.006 }, // New York
-	{ lat: 34.0522, lng: -118.2437 }, // Los Angeles
-	{ lat: 51.5074, lng: -0.1278 }, // London
-	{ lat: 48.8566, lng: 2.3522 }, // Paris
-	{ lat: 35.6762, lng: 139.6503 }, // Tokyo
-	{ lat: -33.8688, lng: 151.2093 }, // Sydney
-	{ lat: 55.7558, lng: 37.6173 }, // Moscow
-	{ lat: 19.4326, lng: -99.1332 }, // Mexico City
-	{ lat: 39.9042, lng: 116.4074 }, // Beijing
-	{ lat: -23.5505, lng: -46.6333 }, // São Paulo
-];
-
+var marker
 let currentIcao = "EFIV"
 
 let currentIndex = 0;
-var marker = L.marker([locations[currentIndex].lat, locations[currentIndex].lng]).addTo(map);
 
 const allButtons = document.getElementById("allBtn");
 const flyOptions = document.getElementById("flyOptions");
@@ -34,17 +21,46 @@ const flyBtn = document.getElementById("flyBtn");
 const option1Btn = document.getElementById("option1Btn");
 const option2Btn = document.getElementById("option2Btn");
 
-function selectNextLocation(ICAO) {
-	if (currentIndex < locations.length - 1) {
-		currentIndex++;
-		const location = locations[currentIndex];
-		map.setView([location.lat, location.lng], 10);
-		marker.setLatLng([location.lat, location.lng]);
-		flyOptions.innerHTML = ""
-		currentIcao = ICAO
-	} else {
-		alert("You reached the end.");
+async function SetFirstLocation() {
+	url = "http://127.0.0.1:3000/start";
+	try {
+		const response = await fetch(url)
+		if (!response.ok) {
+			throw new Error("Response status: " + response.status)
+		}
+
+		const result = await response.json();
+		map.flyTo([result["lat"], result["lon"]], 5);
+		marker.setLatLng([result["lat"], result["lon"]]);
 	}
+	catch (error) {
+		console.error(error.message);
+	}
+}
+
+SetFirstLocation()
+
+async function selectNextLocation(ICAO) {
+	currentIcao = ICAO;
+	url = "http://127.0.0.1:3000/fly/" + ICAO;
+	flyOptions.innerHTML = "";
+	try {
+		const response = await fetch(url)
+		if (!response.ok) {
+			throw new Error("Response status: " + response.status)
+		}
+
+		const result = await response.json();
+		console.log(result["lat"]);
+		console.log(result["lon"]);
+		map.flyTo([result["lat"], result["lon"]], 5);
+		marker.setLatLng([result["lat"], result["lon"]]);
+		map.setZoom(10)
+	}
+	catch (error) {
+		console.error(error.message);
+	}
+
 }
 
 async function showFlyOptions() {
@@ -59,12 +75,11 @@ async function showFlyOptions() {
 		}
 
 		const result = await response.json();
-		console.log(result)
-		for (let i = 0; i < result.length; i++) {
-			const btn = document.createElement("button")
-			flyOptions.appendChild(btn)
-			btn.innerHTML = result[i] // todo: get name from db
-			btn.value = result[i]
+		for (let i = 0; i < Object.keys(result.Ports).length; i++) {
+			const btn = document.createElement("button");
+			flyOptions.appendChild(btn);
+			btn.innerHTML = result["Ports"][i]["name"];
+			btn.value = result["Ports"][i]["icao"]
 			btn.addEventListener("click", () => {
 				onControlClick("Option 1", () => {
 					selectNextLocation(btn.value);
@@ -147,14 +162,14 @@ function closeInfo() {
 infoBtn.addEventListener("click", openInfo);
 closeInfoBtn.addEventListener("click", closeInfo);
 
-async function logout(){
+async function logout() {
 	const response = await fetch("http://127.0.0.1:3000/logout", {
 		method: "POST"
 	});
 
 	const data = await response.json();
 
-	if(data.success){
+	if (data.success) {
 		window.location.href = "userOptions.html";
 	}
 }

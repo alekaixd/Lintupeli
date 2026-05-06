@@ -1,6 +1,8 @@
 import mysql.connector
 import bcrypt
-from flask import Flask, request, jsonify, send_file, g, Blueprint, session, current_app
+from flask import Flask, request, jsonify, send_file, g, Blueprint, session
+import MigrationScript
+
 
 def GetDatabaseLoginCredentials():
     username = ""
@@ -48,6 +50,9 @@ def teardown_db(exception):
         db.close()
 
 
+MigrationScript.InitMap()
+
+
 @user_bp.route('/fly/<ICAO>', methods=['GET'])
 def FlyToLocation(ICAO):
     try:
@@ -60,10 +65,49 @@ def FlyToLocation(ICAO):
         pos = result[0]
         locationData = {
             "ICAO": ICAO,
-            "lon": pos[0],
-            "lat": pos[1]
+            "lat": pos[0],
+            "lon": pos[1]
         }
         return locationData
+    except Exception as e:
+        return f"invalid ICAO code: {e}"
+
+
+@user_bp.route('/start', methods=['GET'])
+def GetFirstICAO():
+    try:
+        port = MigrationScript.GetFirstPort()
+        sql = f"SELECT ident, name, latitude_deg, longitude_deg FROM airport WHERE ident='{
+            port}'"
+        print(port)
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute(sql)
+        result = cursor.fetchall()
+        firstPort = {
+            "icao": result[0][0],
+            "name": result[0][1],
+            "lat": result[0][2],
+            "lon": result[0][3]
+        }
+        return firstPort
+    except Exception as e:
+        return f"invalid ICAO code: {e}"
+
+
+@user_bp.route('/map/<ICAO>', methods=['GET'])
+def GetNextMaps(ICAO):
+    try:
+        ports = MigrationScript.GetNextPort(ICAO)
+        portData = {"Ports": {}}
+        db = get_db()
+        cursor = db.cursor()
+        for i, port in enumerate(ports):
+            sql = f"SELECT name FROM airport WHERE ident='{port}'"
+            cursor.execute(sql)
+            result = cursor.fetchall()
+            portData["Ports"][i] = {"icao": port, "name": result[0][0]}
+        return portData
     except Exception as e:
         return f"invalid ICAO code: {e}"
 
@@ -143,6 +187,7 @@ def InsertUser(username, password):
     except mysql.connector.IntegrityError:
         db.rollback()
         return False
+
 
 @user_bp.route('/difficulty', methods=['POST'])
 def Difficulty():
