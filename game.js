@@ -220,10 +220,4 @@ async function logout() {
 	if (data.success) {
 		window.location.href = "userOptions.html";
 	}
-<<<<<<< HEAD
 }
-
-document.getElementById("username")
-=======
-}
->>>>>>> f0caa2e5fe3fb55fd98d1c41608a8034bd43682b
