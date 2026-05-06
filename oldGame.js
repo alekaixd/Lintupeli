@@ -1,8 +1,6 @@
 async function oldGames(){
     try{
-        const response = await fetch("http://localhost:3000/oldGameData", {
-            credentials: "include"
-        });
+        const response = await fetch("http://localhost:3000/oldGameData");
 
         const games = await response.json();
 
