@@ -10,7 +10,27 @@ L.tileLayer(
 	},
 ).addTo(map);
 
-var marker = L.marker([0, 0]).addTo(map)
+
+
+//creating new icon for marker
+var LeafIcon = L.Icon.extend({
+    options: {
+       iconSize:     [38, 95],
+       shadowSize:   [50, 64],
+       iconAnchor:   [22, 94],
+       shadowAnchor: [4, 62],
+       popupAnchor:  [-3, -76]
+    }
+});
+
+var greenIcon = new LeafIcon({
+    iconUrl: 'bird.png',
+})
+
+var marker = L.marker([0, 0], {icon: greenIcon}).addTo(map);
+//////////////////////
+
+
 
 let currentIcao = "EFIV"
 let score = 0
