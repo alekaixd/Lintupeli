@@ -271,6 +271,11 @@ infoBtn.addEventListener("click", function infoEvent() {
 	openInfo(iTitle, iText);
 });
 closeInfoBtn.addEventListener("click", closeInfo);
+infoOverlay.addEventListener("click", function (event) {
+	if (event.target === infoOverlay) {
+		closeInfo();
+	}
+});
 
 async function logout() {
 	const response = await fetch("http://localhost:3000/logout", {
