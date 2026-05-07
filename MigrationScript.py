@@ -1,5 +1,4 @@
 import json
-from flask import Flask, jsonify, request
 
 
 class Map:  # https://www.w3schools.com/dsa/dsa_data_graphs_implementation.php

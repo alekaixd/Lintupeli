@@ -14,29 +14,31 @@ L.tileLayer(
 
 //creating new icon for marker
 var LeafIcon = L.Icon.extend({
-    options: {
-       iconSize:     [38, 95],
-       shadowSize:   [50, 64],
-       iconAnchor:   [22, 94],
-       shadowAnchor: [4, 62],
-       popupAnchor:  [-3, -76]
-    }
+	options: {
+		iconSize: [38, 95],
+		shadowSize: [50, 64],
+		iconAnchor: [22, 94],
+		shadowAnchor: [4, 62],
+		popupAnchor: [-3, -76]
+	}
 });
 
 var greenIcon = new LeafIcon({
-    iconUrl: 'bird.png',
-})
+	iconUrl: 'bird.png',
+});
 
-var marker = L.marker([0, 0], {icon: greenIcon}).addTo(map);
+var marker = L.marker([0, 0], { icon: greenIcon }).addTo(map);
 //////////////////////
 
 
 
-let currentIcao = "EFIV"
-let score = 0
-let energy = 50
-let maxEnergy = energy
-let combo = 1
+let currentIcao = "EFIV";
+let score = 0;
+let energy = 50;
+let maxEnergy = energy;
+let combo = 1;
+let maxActions = 3;
+let actions = maxActions;
 
 const allButtons = document.getElementById("allBtn");
 const flyOptions = document.getElementById("flyOptions");
@@ -52,9 +54,9 @@ const actionText = document.getElementById("actions");
 async function SetFirstLocation() {
 	url = "http://127.0.0.1:3000/start";
 	try {
-		const response = await fetch(url)
+		const response = await fetch(url);
 		if (!response.ok) {
-			throw new Error("Response status: " + response.status)
+			throw new Error("Response status: " + response.status);
 		}
 
 		const result = await response.json();
@@ -89,7 +91,9 @@ async function selectNextLocation(ICAO) {
 		energy -= result["energyUsed"];
 		updateEnergy();
 		combo += 1;
-		multiplierText.innerHTML = "Multiplier: " + combo + "x"
+		actions = maxActions
+		updateActions()
+		updateCombo()
 	}
 	catch (error) {
 		console.error(error.message);
@@ -109,17 +113,25 @@ async function showFlyOptions() {
 		}
 
 		const result = await response.json();
-		for (let i = 0; i < Object.keys(result.Ports).length; i++) {
-			const btn = document.createElement("button");
-			flyOptions.appendChild(btn);
-			btn.innerHTML = result["Ports"][i]["name"];
-			btn.value = result["Ports"][i]["icao"]
-			btn.addEventListener("click", () => {
-				onControlClick("Option 1", () => {
-					selectNextLocation(btn.value);
-					restoreButtons();
+		if (Object.keys(result.Ports).length != 0) {
+
+			for (let i = 0; i < Object.keys(result.Ports).length; i++) {
+				const btn = document.createElement("button");
+				flyOptions.appendChild(btn);
+				btn.id = "confirmFlyBtn"
+				btn.innerHTML = result["Ports"][i]["name"] + "<br>" + result["Ports"][i]["distance"] + "km";
+				btn.value = result["Ports"][i]["icao"]
+				btn.addEventListener("click", () => {
+					onControlClick("Option 1", () => {
+						selectNextLocation(btn.value);
+						restoreButtons();
+					});
 				});
-			});
+			}
+		}
+		else {
+			openInfo("You Migrated successfully!", "Remember to enjoy your summer vacation :D")
+			//you win
 		}
 	}
 	catch (error) {
@@ -191,8 +203,12 @@ async function Chirp() {
 
 		const result = await response.json();
 		score += result["addedScore"];
+		actions -= 1;
+		combo = 1;
+		updateCombo()
+		updateActions();
 		scoreText.innerHTML = "Score: " + score;
-		onControlClick("Chirp")
+		onControlClick("Chirp");
 	}
 	catch (error) {
 		console.error(error.message);
@@ -210,6 +226,10 @@ async function Eat() {
 		const result = await response.json();
 		maxEnergy += result["addedEnergy"];
 		energy += result["addedEnergy"];
+		actions -= 1;
+		combo = 1;
+		updateCombo()
+		updateActions()
 		updateEnergy();
 		showMessage(result["message"]);
 	}
@@ -220,6 +240,10 @@ async function Eat() {
 
 function sleep() {
 	energy = maxEnergy;
+	actions -= 1;
+	combo = 1;
+	updateCombo()
+	updateActions();
 	updateEnergy();
 	showMessage("You rested well! Energy fully restored");
 }
@@ -227,16 +251,25 @@ function sleep() {
 const infoBtn = document.getElementById("infoBtn");
 const infoOverlay = document.getElementById("infoOverlay");
 const closeInfoBtn = document.getElementById("closeInfoBtn");
+const infoTitle = document.getElementById("infoTitle")
+const infoText = document.getElementById("infoText")
 
-function openInfo() {
+function openInfo(title, text) {
 	infoOverlay.classList.remove("hidden");
+	infoTitle.innerHTML = title
+	infoText.innerHTML = text
 }
 
 function closeInfo() {
 	infoOverlay.classList.add("hidden");
 }
 
-infoBtn.addEventListener("click", openInfo);
+const iTitle = "Migration Migraine"
+const iText = "You are a bird trying to survive the deadly winter.\nManage your energy wisely to reach your vacation home for the winter.Eat food to raise your maximum energy and sleep to recharge all of your energy."
+openInfo(iTitle, iText);
+infoBtn.addEventListener("click", function infoEvent() {
+	openInfo(iTitle, iText);
+});
 closeInfoBtn.addEventListener("click", closeInfo);
 
 async function logout() {
@@ -252,6 +285,23 @@ async function logout() {
 }
 
 function updateEnergy() {
-	energyText.innerHTML = "Energy: " + energy + "/" + maxEnergy;
+	if (energy <= 0) {
+		energy = 0
+		energyText.innerHTML = "Energy: " + energy + "/" + maxEnergy;
+		openInfo("You lose!", "You ran out of energy. Remember to sleep and eat to gain more energy<br>Your Score: " + score)
+	}
+	else {
+		energyText.innerHTML = "Energy: " + energy + "/" + maxEnergy;
+	}
 }
 
+function updateActions() {
+	actionText.innerHTML = "Actions: " + actions + "/" + maxActions;
+	if (actions < 0) {
+		openInfo("You lose!", "You stayed still too long. Fly more often so the winter doesnt catch up to you<br>Your Score: " + score)
+	}
+}
+
+function updateCombo() {
+	multiplierText.innerHTML = "Multiplier: " + combo + "x"
+}
