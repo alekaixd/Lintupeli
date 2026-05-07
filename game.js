@@ -329,3 +329,17 @@ usernameText.innerHTML += username
 console.log(bird_name)
 console.log(max_energy)
 console.log(username)
+
+const game = JSON.parse(localStorage.getItem("selected_game"));
+
+let max_energy = game.max_energy;
+let currentEnergy = game.current_energy;
+let continue_score = game.score;
+let speciesName = game.species_name;
+let continue_location = game.location;
+
+console.log(max_energy)
+console.log(currentEnergy)
+console.log(continue_score)
+console.log(speciesName)
+console.log(continue_location)

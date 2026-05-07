@@ -264,6 +264,6 @@ def FetchGameData(userId, status="saved"):
     db = get_db()
     cursor = db.cursor()
     sql = "SELECT id, location, current_energy, max_energy, species_name, score FROM game WHERE status=%s AND player_id=%s"
-    cursor.execute(sql, (status, userId))
+    cursor.execute(sql, (status, int(userId)))
     games = cursor.fetchall()
     return games
