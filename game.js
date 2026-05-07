@@ -35,7 +35,7 @@ var marker = L.marker([0, 0], { icon: greenIcon }).addTo(map);
 
 let currentIcao = "EFIV";
 let score = 0;
-let maxEnergy = 50;
+let maxEnergy = localStorage.getItem("max_energy");
 let energy = maxEnergy;
 let combo = 1;
 let maxActions = 3;
@@ -322,7 +322,6 @@ function updateCombo() {
 }
 
 const bird_name = localStorage.getItem("bird_name")
-const max_energy = localStorage.getItem("max_energy")
 const username = localStorage.getItem("username")
 
 usernameText.innerHTML += username
