@@ -307,3 +307,11 @@ input {
 #send {
 font-size: 20px;
 }
+
+.text{
+  user-select: none;
+}
+
+.text:hover {
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+}

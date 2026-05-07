@@ -33,6 +33,80 @@ var greenIcon = new LeafIcon({
 var marker = L.marker([0, 0], { icon: greenIcon }).addTo(map);
 //////////////////////
 
+const username = localStorage.getItem("username")
+
+function GetInitialGameState() {
+    const gameRaw = localStorage.getItem("selected_game");
+    const game = gameRaw ? JSON.parse(gameRaw) : null;
+
+    const birdName = localStorage.getItem("bird_name");
+    const birdMaxEnergyRaw = localStorage.getItem("max_energy");
+    const birdMaxEnergy = birdMaxEnergyRaw ? Number(birdMaxEnergyRaw) : null;
+
+    let speciesName;
+    if (game && game.species_name != null) {
+        speciesName = game.species_name;
+    } else if (birdName != null) {
+        speciesName = birdName;
+    } else {
+        speciesName = "Unknown Bird";
+    }
+
+    let maxEnergy;
+    if (game && game.max_energy != null) {
+        maxEnergy = game.max_energy;
+    } else if (birdMaxEnergy != null) {
+        maxEnergy = birdMaxEnergy;
+    } else {
+        maxEnergy = 50;
+    }
+
+    let energy;
+    if (game && game.current_energy != null) {
+        energy = game.current_energy;
+    } else if (birdMaxEnergy != null) {
+        energy = birdMaxEnergy;
+    } else {
+        energy = 50;
+    }
+
+    let score;
+    if (game && game.score != null) {
+        score = game.score;
+    } else {
+        score = 0;
+    }
+
+    let location;
+    if (game && game.location != null) {
+        location = game.location;
+    } else {
+        location = "EFIV";
+    }
+
+    return {
+        speciesName,
+        maxEnergy,
+        energy,
+        score,
+        location
+    };
+}
+
+const state = GetInitialGameState();
+
+let speciesName = state.speciesName;
+let maxEnergy = state.maxEnergy;
+let energy = state.energy;
+let score = state.score;
+let currentIcao = state.location;
+
+console.log(speciesName)
+console.log(maxEnergy)
+console.log(energy)
+console.log(score)
+console.log(currentIcao)
+
 /*
 let currentIcao = "EFIV";
 let score = 0;
@@ -325,80 +399,6 @@ function updateActions() {
 function updateCombo() {
 	multiplierText.innerHTML = "⭐ Multiplier: " + combo + "x"
 }
-
-const username = localStorage.getItem("username")
-
-function GetInitialGameState() {
-    const gameRaw = localStorage.getItem("selected_game");
-    const game = gameRaw ? JSON.parse(gameRaw) : null;
-
-    const birdName = localStorage.getItem("bird_name");
-    const birdMaxEnergyRaw = localStorage.getItem("max_energy");
-    const birdMaxEnergy = birdMaxEnergyRaw ? Number(birdMaxEnergyRaw) : null;
-
-    let speciesName;
-    if (game && game.species_name != null) {
-        speciesName = game.species_name;
-    } else if (birdName != null) {
-        speciesName = birdName;
-    } else {
-        speciesName = "Unknown Bird";
-    }
-
-    let maxEnergy;
-    if (game && game.max_energy != null) {
-        maxEnergy = game.max_energy;
-    } else if (birdMaxEnergy != null) {
-        maxEnergy = birdMaxEnergy;
-    } else {
-        maxEnergy = 50;
-    }
-
-    let energy;
-    if (game && game.current_energy != null) {
-        energy = game.current_energy;
-    } else if (birdMaxEnergy != null) {
-        energy = birdMaxEnergy;
-    } else {
-        energy = 50;
-    }
-
-    let score;
-    if (game && game.score != null) {
-        score = game.score;
-    } else {
-        score = 0;
-    }
-
-    let location;
-    if (game && game.location != null) {
-        location = game.location;
-    } else {
-        location = "EFIV";
-    }
-
-    return {
-        speciesName,
-        maxEnergy,
-        energy,
-        score,
-        location
-    };
-}
-
-const state = GetInitialGameState();
-
-let speciesName = state.speciesName;
-let maxEnergy = state.maxEnergy;
-let energy = state.energy;
-let score = state.score;
-let currentIcao = state.location;
-
-console.log(speciesName)
-console.log(maxEnergy)
-console.log(energy)
-console.log(score)
-console.log(currentIcao)
 
 function options(){
 	window.location.href = "savexit.html";

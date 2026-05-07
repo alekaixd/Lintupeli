@@ -4,5 +4,5 @@ function Save(){
 
 function Exit(){
     localStorage.clear();
-    ShowUserOptions();
+    window.location.href = "game.html";
 }
