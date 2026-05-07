@@ -18,7 +18,9 @@ function login() {
 
         .then(data => {
             if (data.success) {
-                window.location.href = "newOrOldGame.html";
+                localStorage.setItem("user_id", data.user_id);
+
+                ShowNewOrOldGame();
             } else {
                 document.getElementById("complaint").innerText = "wrong username or password";
             }
