@@ -1,6 +1,6 @@
 import mysql.connector
 import bcrypt
-from flask import Flask, request, jsonify, send_file, g, Blueprint, session
+from flask import Flask, request, jsonify, send_file, g, Blueprint, current_app
 import MigrationScript
 from geopy import distance
 
@@ -167,16 +167,15 @@ def login():
     result = cursor.fetchone()
 
     if result is None:
-        return (jsonify(success=False))
+        return jsonify(success=False)
 
     user_id = result[0]
     storedHash = result[1].encode()
 
     if bcrypt.checkpw(password.encode(), storedHash):
-        session["user_id"] = user_id
-        return (jsonify(success=True))
-    else:
-        return (jsonify(success=False))
+        return jsonify(success=True, user_id = user_id)
+
+    return jsonify(success=False)
 
 
 @user_bp.route('/createUser', methods=['POST'])
@@ -205,10 +204,9 @@ def createUser():
     cursor.execute(sql, (username,))
     result = cursor.fetchone()
 
-    session["user_id"] = result[0]
-    session["username"] = username
+    player_id = result[0]
 
-    return jsonify(success=True)
+    return jsonify(success=True, player_id = player_id)
 
 
 def InsertUser(username, password):
@@ -237,21 +235,18 @@ def Difficulty():
     name = data["name"]
     maxEnergy = data["maxEnergy"]
 
-    session["bird_name"] = name
-    session["max_energy"] = maxEnergy
+    return jsonify(success=True, name = name, maxEnergy = maxEnergy)
 
-    return jsonify(success=True)
-
-
+"""
 @user_bp.route("/logout", methods=["POST"])
 def Logout():
     session.clear()
     return jsonify(success=True)
+"""
 
 
 @user_bp.route("/oldGameData")
 def OldGameData():
-    userId = session.get("user_id")
 
     print("SESSION user_id:", userId)
 
