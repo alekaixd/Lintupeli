@@ -399,3 +399,7 @@ console.log(maxEnergy)
 console.log(energy)
 console.log(score)
 console.log(currentIcao)
+
+function options(){
+	window.location.href = "savexit.html";
+}
