@@ -18,7 +18,7 @@ async function clickedBird(element){
     console.log("server response:", data)
 
     if (data.success){
-        ShowGame()
+        window.location.href = "index.html";
     }
 
 }
