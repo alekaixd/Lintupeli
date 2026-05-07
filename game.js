@@ -223,7 +223,11 @@ async function showFlyOptions() {
 			});
 		}
 		else {
+			SaveAll();
 			openInfo("You Migrated successfully!", "Remember to enjoy your summer vacation :D<br>score: " + score)
+			setTimeout(function () {
+				window.location.href = "FinishScreen.html";
+			}, 3000);
 		}
 	}
 	catch (error) {

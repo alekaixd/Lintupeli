@@ -45,6 +45,8 @@ function selectGame(game) {
 
     localStorage.setItem("selected_game", JSON.stringify(saveData));
 
+    localStorage.setItem("gameId", game.id);
+
     window.location.href = "index.html";
 }
 

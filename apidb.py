@@ -3,6 +3,7 @@ import bcrypt
 from flask import Flask, request, jsonify, send_file, g, Blueprint, current_app
 import MigrationScript
 from geopy import distance
+import random
 
 
 def GetDatabaseLoginCredentials():
@@ -300,3 +301,72 @@ def InsertGame(playerId, location, currentEnergy, maxEnergy, speciesName, score,
         cursor.execute(sql, (location, currentEnergy, maxEnergy, speciesName, status, score, gameId))
         db.commit()
         print("Game saved!")
+
+def FetchScoresData():
+    db = get_db()
+    sql = f"SELECT scores.total_score, user.username, game.species_name FROM user JOIN scores ON scores.player_id = user.player_id JOIN game ON game.id = scores.game_id AND game.player_id = user.player_id WHERE game.status = 'completed' ORDER BY scores.total_score DESC LIMIT 10"
+    cursor = db.cursor()
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    return result
+
+@user_bp.route('/leaderboard', methods=['GET'])
+def leaderboard():
+
+    scores = FetchScoresData()
+
+    leaderboardData = []
+
+    for score, username, species in scores:
+        leaderboardData.append({
+            "username": username,
+            "species": species,
+            "score": score
+        })
+
+    return jsonify(leaderboardData)
+
+from flask import request, jsonify
+
+@user_bp.route("/saveFinalGame", methods=["POST"])
+def save_final_game():
+
+    data = request.get_json()
+
+    print("=== SAVE FINAL GAME REQUEST ===")
+    print(data)
+
+    gameId = data["gameId"]
+    score = data["score"]
+    daysSurvived = None
+    playerId = data["userId"]
+
+    if gameId is None:
+        gameId = None
+
+    try:
+        if gameId is not None:
+            UpdateGameStatus(gameId, "completed")
+
+        InsertScore(score, daysSurvived, gameId, playerId)
+
+        return jsonify(success=True)
+
+    except Exception as e:
+        print(e)
+        return jsonify(success=False)
+
+def UpdateGameStatus(gameId, status):
+    sql = "UPDATE game SET status = %s WHERE id = %s"
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute(sql, (status, gameId))
+    db.commit()
+
+def InsertScore(totalScore, daysSurvived, gameId, playerId):
+    db = get_db()
+    cursor = db.cursor()
+
+    sql = f"INSERT INTO scores (player_id, total_score, days_survived, game_id) VALUES (%s, %s, %s, %s)"
+    cursor.execute(sql, (playerId, totalScore, daysSurvived, gameId))
+    db.commit()

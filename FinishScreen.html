@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="FinishScreen.js" defer></script>
+</head>
+<body>
+    <div id="header">
+        <header>
+            <h1>Bird Game 🪽</h1>
+        </header>
+        <div class="container">
+            <h1 id="center_text">Congratulation!! You won!! 0.0</h1>
+
+            <div id="saveGameFinal" onclick="SaveFinalGame()">
+                <h2 class="center_text">Save your win to leaderboards!</h2>
+                <h2 id="complaint"></h2>
+            </div>
+
+            <div id="leaderboards" onclick="Leaderboard()">
+                <h2 class="center_text">Peak at the leaderboard</h2>
+            </div>
+
+            <div id="Logout" onclick="Logout()">
+                <h2 class="center_text">Exit</h2>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

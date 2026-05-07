@@ -315,3 +315,17 @@ font-size: 20px;
 .text:hover {
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
 }
+
+.center_text{
+  text-align: center;
+  user-select: none;
+}
+
+.center_text:hover{
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+#center_text {
+  text-align: center;
+  user-select: none;
+}
