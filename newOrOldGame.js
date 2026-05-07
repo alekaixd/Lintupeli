@@ -1,5 +1,3 @@
-function selected(item){
-    if(item.dataset.value === "old"){
-        window.location.href = "oldGame.html";
-    }
+function selected() {
+    window.location.href = "oldGame.html";
 }

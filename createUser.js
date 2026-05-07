@@ -18,7 +18,10 @@ function createUser() {
 
         .then(data => {
             if (data.success) {
-                window.location.href = "newOrOldGame.html";
+                localStorage.setItem("user_id", data.player_id);
+                localStorage.setItem("username", username)
+
+                ShowNewOrOldGame()
             } else {
                 document.getElementById("complaint").innerText = data.message;
             }

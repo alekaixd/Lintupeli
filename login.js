@@ -20,6 +20,8 @@ function login() {
             if (data.success) {
                 localStorage.setItem("user_id", data.user_id);
 
+                localStorage.setItem("username", username)
+
                 ShowNewOrOldGame();
             } else {
                 document.getElementById("complaint").innerText = "wrong username or password";

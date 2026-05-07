@@ -203,8 +203,8 @@ def createUser():
     db = get_db()
     cursor = db.cursor()
 
-    sql = "SELECT player_id FROM user WHERE username = %s"
-    cursor.execute(sql, (username,))
+    sql = f"SELECT player_id FROM user WHERE username = '{username}'"
+    cursor.execute(sql)
     result = cursor.fetchone()
 
     player_id = result[0]
@@ -228,17 +228,6 @@ def InsertUser(username, password):
     except mysql.connector.IntegrityError:
         db.rollback()
         return False
-
-
-@user_bp.route('/difficulty', methods=['POST'])
-def Difficulty():
-
-    data = request.get_json()
-
-    name = data["name"]
-    maxEnergy = data["maxEnergy"]
-
-    return jsonify(success=True, name = name, maxEnergy = maxEnergy)
 
 """
 @user_bp.route("/logout", methods=["POST"])

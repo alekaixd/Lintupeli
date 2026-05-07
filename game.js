@@ -320,3 +320,13 @@ function updateActions() {
 function updateCombo() {
 	multiplierText.innerHTML = "Multiplier: " + combo + "x"
 }
+
+const bird_name = localStorage.getItem("bird_name")
+const max_energy = localStorage.getItem("max_energy")
+const username = localStorage.getItem("username")
+
+usernameText.innerHTML += username
+
+console.log(bird_name)
+console.log(max_energy)
+console.log(username)
