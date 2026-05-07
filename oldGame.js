@@ -1,6 +1,8 @@
 async function oldGames(){
     try{
-        const response = await fetch("http://127.0.0.1:3000/oldGameData")
+        const userId = localStorage.getItem("user_id");
+
+        const response = await fetch(`http://127.0.0.1:3000/oldGameData?userId=${userId}`)
 
         const games = await response.json();
 

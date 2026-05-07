@@ -65,7 +65,7 @@ function ShowNewOrOldGame(){
       <div onclick="ShowNewGame()" data-value="new" class="button">
           <h3>Start new game</h3>
       </div>
-      <div onclick="ShowOldGame()" data-value="old" class="button">
+      <div onclick="selected(item)" data-value="old" class="button">
           <h3>Continue previous game</h3>
       </div>`
 }

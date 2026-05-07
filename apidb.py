@@ -160,16 +160,19 @@ def login():
     username = data["username"]
     password = data["password"]
 
-    sql = "SELECT player_id, password_hash FROM user WHERE username=%s"
+    sql = f"SELECT player_id, password_hash FROM user WHERE username='{username}'"
     db = get_db()
     cursor = db.cursor()
-    cursor.execute(sql, (username,))
+    cursor.execute(sql)
     result = cursor.fetchone()
 
     if result is None:
         return jsonify(success=False)
 
     user_id = result[0]
+
+    print(user_id)
+
     storedHash = result[1].encode()
 
     if bcrypt.checkpw(password.encode(), storedHash):
@@ -247,8 +250,7 @@ def Logout():
 
 @user_bp.route("/oldGameData")
 def OldGameData():
-
-    print("SESSION user_id:", userId)
+    userId = request.args.get("userId")
 
     games = FetchGameData(userId)
 
