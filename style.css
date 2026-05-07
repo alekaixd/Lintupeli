@@ -130,6 +130,7 @@ header ul li button:hover {
   text-align: left;
   width: 100%;
   padding-left: 10%;
+  font-size: 18px;
 }
 
 .hidden {
