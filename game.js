@@ -412,3 +412,11 @@ function updateCombo() {
 function options() {
 	window.location.href = "savexit.html";
 }
+
+function SaveAll() {
+	localStorage.setItem("currentIcao", currentIcao)
+	localStorage.setItem("maxEnergy", maxEnergy)
+	localStorage.setItem("currentEnergy", energy)
+	localStorage.setItem("score", score)
+	localStorage.setItem("userID", uid)
+}
