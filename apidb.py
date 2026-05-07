@@ -142,7 +142,11 @@ def GetNextMaps(ICAO):
             sql = f"SELECT name FROM airport WHERE ident='{port}'"
             cursor.execute(sql)
             result = cursor.fetchall()
-            portData["Ports"][i] = {"icao": port, "name": result[0][0]}
+            dist = round(CalculateDistance(ICAO, port))
+            portData["Ports"][i] = {"icao": port,
+                                    "name": result[0][0],
+                                    "distance": dist}
+
         return portData
     except Exception as e:
         return f"invalid ICAO code: {e}"
