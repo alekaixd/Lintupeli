@@ -41,6 +41,9 @@ let combo = 1;
 let maxActions = 3;
 let actions = maxActions;
 
+const uid = localStorage.getItem("user_id")
+console.log(uid)
+
 const allButtons = document.getElementById("allBtn");
 const flyOptions = document.getElementById("flyOptions");
 const flyBtn = document.getElementById("flyBtn");
@@ -273,7 +276,7 @@ infoBtn.addEventListener("click", function infoEvent() {
 	openInfo(iTitle, iText);
 });
 closeInfoBtn.addEventListener("click", closeInfo);
-infoOverlay.addEventListener("click", function (event) {
+infoOverlay.addEventListener("click", function(event) {
 	if (event.target === infoOverlay) {
 		closeInfo();
 	}
