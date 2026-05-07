@@ -31,4 +31,4 @@ Running the API:
 python3 api.py
 ```
 
-
+open game.html
