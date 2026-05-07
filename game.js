@@ -76,7 +76,6 @@ SetFirstLocation()
 
 async function selectNextLocation(ICAO) {
 	url = "http://127.0.0.1:3000/fly/" + ICAO + "?currentICAO=" + currentIcao + "&combo=" + combo;
-	flyOptions.innerHTML = "";
 	currentIcao = ICAO;
 	try {
 		const response = await fetch(url)
@@ -131,8 +130,13 @@ async function showFlyOptions() {
 						restoreButtons();
 					});
 				});
-			}
-			// const backBtn = document.createElement("button") //todo
+			};
+			const backBtn = document.createElement("button");
+			flyOptions.appendChild(backBtn);
+			backBtn.innerHTML = "Back";
+			backBtn.addEventListener("click", () => {
+				restoreButtons();
+			});
 		}
 		else {
 			openInfo("You Migrated successfully!", "Remember to enjoy your summer vacation :D")
@@ -147,6 +151,7 @@ async function showFlyOptions() {
 function restoreButtons() {
 	flyOptions.classList.add("hidden");
 	allButtons.classList.remove("hidden");
+	flyOptions.innerHTML = "";
 }
 
 function showMessage(text) {
