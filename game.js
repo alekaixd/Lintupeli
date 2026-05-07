@@ -223,8 +223,7 @@ async function showFlyOptions() {
 			});
 		}
 		else {
-			openInfo("You Migrated successfully!", "Remember to enjoy your summer vacation :D")
-			//you win
+			openInfo("You Migrated successfully!", "Remember to enjoy your summer vacation :D<br>score: " + score)
 		}
 	}
 	catch (error) {
@@ -386,6 +385,7 @@ async function logout() {
 function updateEnergy() {
 	if (energy <= 0) {
 		energy = 0
+		allButtons.classList.add("hidden")
 		energyText.innerHTML = "⚡ Energy: " + energy + "/" + maxEnergy;
 		openInfo("You lose!", "You ran out of energy. Remember to sleep and eat to gain more energy<br>Your Score: " + score)
 	}
@@ -397,6 +397,7 @@ function updateEnergy() {
 function updateActions() {
 	actionText.innerHTML = "🔥 Actions: " + actions + "/" + maxActions;
 	if (actions < 0) {
+		allButtons.classList.add("hidden")
 		openInfo("You lose!", "You stayed still too long. Fly more often so the winter doesnt catch up to you<br>Your Score: " + score)
 	}
 }
