@@ -30,12 +30,10 @@ var greenIcon = new LeafIcon({
 var marker = L.marker([0, 0], { icon: greenIcon }).addTo(map);
 //////////////////////
 
-
-
 let currentIcao = "EFIV";
 let score = 0;
-let energy = 50;
-let maxEnergy = energy;
+let maxEnergy = 50;
+let energy = maxEnergy;
 let combo = 1;
 let maxActions = 3;
 let actions = maxActions;
