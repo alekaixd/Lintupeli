@@ -36,61 +36,61 @@ var marker = L.marker([0, 0], { icon: greenIcon }).addTo(map);
 const username = localStorage.getItem("username")
 
 function GetInitialGameState() {
-    const gameRaw = localStorage.getItem("selected_game");
-    const game = gameRaw ? JSON.parse(gameRaw) : null;
+	const gameRaw = localStorage.getItem("selected_game");
+	const game = gameRaw ? JSON.parse(gameRaw) : null;
 
-    const birdName = localStorage.getItem("bird_name");
-    const birdMaxEnergyRaw = localStorage.getItem("max_energy");
-    const birdMaxEnergy = birdMaxEnergyRaw ? Number(birdMaxEnergyRaw) : null;
+	const birdName = localStorage.getItem("bird_name");
+	const birdMaxEnergyRaw = localStorage.getItem("max_energy");
+	const birdMaxEnergy = birdMaxEnergyRaw ? Number(birdMaxEnergyRaw) : null;
 
-    let speciesName;
-    if (game && game.species_name != null) {
-        speciesName = game.species_name;
-    } else if (birdName != null) {
-        speciesName = birdName;
-    } else {
-        speciesName = "Unknown Bird";
-    }
+	let speciesName;
+	if (game && game.species_name != null) {
+		speciesName = game.species_name;
+	} else if (birdName != null) {
+		speciesName = birdName;
+	} else {
+		speciesName = "Unknown Bird";
+	}
 
-    let maxEnergy;
-    if (game && game.max_energy != null) {
-        maxEnergy = game.max_energy;
-    } else if (birdMaxEnergy != null) {
-        maxEnergy = birdMaxEnergy;
-    } else {
-        maxEnergy = 50;
-    }
+	let maxEnergy;
+	if (game && game.max_energy != null) {
+		maxEnergy = game.max_energy;
+	} else if (birdMaxEnergy != null) {
+		maxEnergy = birdMaxEnergy;
+	} else {
+		maxEnergy = 50;
+	}
 
-    let energy;
-    if (game && game.current_energy != null) {
-        energy = game.current_energy;
-    } else if (birdMaxEnergy != null) {
-        energy = birdMaxEnergy;
-    } else {
-        energy = 50;
-    }
+	let energy;
+	if (game && game.current_energy != null) {
+		energy = game.current_energy;
+	} else if (birdMaxEnergy != null) {
+		energy = birdMaxEnergy;
+	} else {
+		energy = 50;
+	}
 
-    let score;
-    if (game && game.score != null) {
-        score = game.score;
-    } else {
-        score = 0;
-    }
+	let score;
+	if (game && game.score != null) {
+		score = game.score;
+	} else {
+		score = 0;
+	}
 
-    let location;
-    if (game && game.location != null) {
-        location = game.location;
-    } else {
-        location = "EFIV";
-    }
+	let location;
+	if (game && game.location != null) {
+		location = game.location;
+	} else {
+		location = "EFIV";
+	}
 
-    return {
-        speciesName,
-        maxEnergy,
-        energy,
-        score,
-        location
-    };
+	return {
+		speciesName,
+		maxEnergy,
+		energy,
+		score,
+		location
+	};
 }
 
 const state = GetInitialGameState();
@@ -134,20 +134,29 @@ const scoreText = document.getElementById("score");
 const energyText = document.getElementById("energy");
 const actionText = document.getElementById("actions");
 
-async function SetFirstLocation() {
-	url = "http://127.0.0.1:3000/start";
-	try {
-		const response = await fetch(url);
-		if (!response.ok) {
-			throw new Error("Response status: " + response.status);
-		}
+updateEnergy();
+scoreText.innerHTML = "🌟 Total Score: " + score;
 
-		const result = await response.json();
-		marker.setLatLng([result["lat"], result["lon"]]);
-		map.flyTo([result["lat"], result["lon"]], 5);
+async function SetFirstLocation() {
+	if (currentIcao == null) {
+
+		url = "http://127.0.0.1:3000/start";
+		try {
+			const response = await fetch(url);
+			if (!response.ok) {
+				throw new Error("Response status: " + response.status);
+			}
+
+			const result = await response.json();
+			marker.setLatLng([result["lat"], result["lon"]]);
+			map.flyTo([result["lat"], result["lon"]], 5);
+		}
+		catch (error) {
+			console.error(error.message);
+		}
 	}
-	catch (error) {
-		console.error(error.message);
+	else {
+		selectNextLocation(currentIcao)
 	}
 }
 
@@ -400,6 +409,6 @@ function updateCombo() {
 	multiplierText.innerHTML = "⭐ Multiplier: " + combo + "x"
 }
 
-function options(){
+function options() {
 	window.location.href = "savexit.html";
 }
