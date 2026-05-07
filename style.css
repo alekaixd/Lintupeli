@@ -244,3 +244,11 @@ header h1 {
 #text {
   text-align: center;
 }
+
+input {
+  padding: 5px;
+}
+
+#send {
+font-size: 20px;
+}
