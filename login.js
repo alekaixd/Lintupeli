@@ -20,7 +20,7 @@ function login() {
             if (data.success) {
                 localStorage.setItem("user_id", data.user_id);
 
-                localStorage.setItem("username", username)
+                localStorage.setItem("username", data.username)
 
                 ShowNewOrOldGame();
             } else {
