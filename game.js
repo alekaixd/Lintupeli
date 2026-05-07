@@ -410,6 +410,7 @@ function updateCombo() {
 }
 
 function options() {
+	SaveAll();
 	window.location.href = "savexit.html";
 }
 
@@ -418,5 +419,5 @@ function SaveAll() {
 	localStorage.setItem("maxEnergy", maxEnergy)
 	localStorage.setItem("currentEnergy", energy)
 	localStorage.setItem("score", score)
-	localStorage.setItem("userID", uid)
+	localStorage.setItem("userId", uid)
 }
