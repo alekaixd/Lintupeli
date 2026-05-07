@@ -1,6 +1,11 @@
 async function oldGames(){
     try{
-        const response = await fetch("http://localhost:3000/oldGameData");
+        const response = await fetch("http://127.0.0.1:3000/oldGameData", {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem("token")
+            }
+        })
 
         const games = await response.json();
 
