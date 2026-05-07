@@ -18,11 +18,7 @@ async function clickedBird(element){
     console.log("server response:", data)
 
     if (data.success){
-        window.location.href = "index.html"
+        ShowGame()
     }
 
-}
-
-function selected(){
-    window.location.href = "newOrOldGame.html";
 }

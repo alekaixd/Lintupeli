@@ -93,7 +93,7 @@ async function selectNextLocation(ICAO) {
 		combo += 1;
 		actions = maxActions
 		updateActions()
-		multiplierText.innerHTML = "Multiplier: " + combo + "x"
+		updateCombo()
 	}
 	catch (error) {
 		console.error(error.message);
@@ -203,10 +203,12 @@ async function Chirp() {
 
 		const result = await response.json();
 		score += result["addedScore"];
-		actions -= 1
-		updateActions()
+		actions -= 1;
+		combo = 1;
+		updateCombo()
+		updateActions();
 		scoreText.innerHTML = "Score: " + score;
-		onControlClick("Chirp")
+		onControlClick("Chirp");
 	}
 	catch (error) {
 		console.error(error.message);
@@ -225,6 +227,8 @@ async function Eat() {
 		maxEnergy += result["addedEnergy"];
 		energy += result["addedEnergy"];
 		actions -= 1;
+		combo = 1;
+		updateCombo()
 		updateActions()
 		updateEnergy();
 		showMessage(result["message"]);
@@ -237,7 +241,9 @@ async function Eat() {
 function sleep() {
 	energy = maxEnergy;
 	actions -= 1;
-	updateActions()
+	combo = 1;
+	updateCombo()
+	updateActions();
 	updateEnergy();
 	showMessage("You rested well! Energy fully restored");
 }
@@ -279,9 +285,13 @@ async function logout() {
 }
 
 function updateEnergy() {
-	energyText.innerHTML = "Energy: " + energy + "/" + maxEnergy;
 	if (energy <= 0) {
+		energy = 0
+		energyText.innerHTML = "Energy: " + energy + "/" + maxEnergy;
 		openInfo("You lose!", "You ran out of energy. Remember to sleep and eat to gain more energy<br>Your Score: " + score)
+	}
+	else {
+		energyText.innerHTML = "Energy: " + energy + "/" + maxEnergy;
 	}
 }
 
@@ -292,3 +302,6 @@ function updateActions() {
 	}
 }
 
+function updateCombo() {
+	multiplierText.innerHTML = "Multiplier: " + combo + "x"
+}
