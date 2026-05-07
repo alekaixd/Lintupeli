@@ -11,7 +11,7 @@ const audioToggleBtn = document.getElementById('audioToggleBtn');
 
 function updateAudioToggleButton() {
 	if (!audioToggleBtn) return;
-	audioToggleBtn.textContent = audioEnabled ? '🔈 Mute Audio' : '🔊 Unmute Audio';
+	audioToggleBtn.textContent = audioEnabled ? '🔊 Mute Audio' : '🔈 Unmute Audio';
 }
 
 function playSound(audio, force = false) {
