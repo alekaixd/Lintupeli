@@ -4,7 +4,7 @@ const closeSound = new Audio('close.mp3');
 
 hoverSound.volume = 0.35;
 clickSound.volume = 0.35;
-closeSound.volume = 0.65;
+closeSound.volume = 0.95;
 
 let audioEnabled = true;
 const audioToggleBtn = document.getElementById('audioToggleBtn');
