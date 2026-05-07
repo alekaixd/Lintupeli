@@ -36,6 +36,9 @@ var marker = L.marker([0, 0], { icon: greenIcon }).addTo(map);
 let currentIcao = "EFIV";
 let score = 0;
 let maxEnergy = localStorage.getItem("max_energy");
+if (maxEnergy == null) {
+	maxEnergy = 50
+}
 let energy = maxEnergy;
 let combo = 1;
 let maxActions = 3;
@@ -90,7 +93,7 @@ async function selectNextLocation(ICAO) {
 		map.setView([result["lat"], result["lon"]], 7);
 
 		score += result["gainedScore"];
-		scoreText.innerHTML = "Total Score: " + score;
+		scoreText.innerHTML = "🌟 Total Score: " + score;
 		energy -= result["energyUsed"];
 		updateEnergy();
 		combo += 1;
@@ -217,7 +220,7 @@ async function Chirp() {
 		combo = 1;
 		updateCombo()
 		updateActions();
-		scoreText.innerHTML = "Score: " + score;
+		scoreText.innerHTML = "🌟 Score: " + score;
 		onControlClick("Chirp");
 	}
 	catch (error) {
@@ -302,23 +305,23 @@ async function logout() {
 function updateEnergy() {
 	if (energy <= 0) {
 		energy = 0
-		energyText.innerHTML = "Energy: " + energy + "/" + maxEnergy;
+		energyText.innerHTML = "⚡ Energy: " + energy + "/" + maxEnergy;
 		openInfo("You lose!", "You ran out of energy. Remember to sleep and eat to gain more energy<br>Your Score: " + score)
 	}
 	else {
-		energyText.innerHTML = "Energy: " + energy + "/" + maxEnergy;
+		energyText.innerHTML = "⚡ Energy: " + energy + "/" + maxEnergy;
 	}
 }
 
 function updateActions() {
-	actionText.innerHTML = "Actions: " + actions + "/" + maxActions;
+	actionText.innerHTML = "🔥 Actions: " + actions + "/" + maxActions;
 	if (actions < 0) {
 		openInfo("You lose!", "You stayed still too long. Fly more often so the winter doesnt catch up to you<br>Your Score: " + score)
 	}
 }
 
 function updateCombo() {
-	multiplierText.innerHTML = "Multiplier: " + combo + "x"
+	multiplierText.innerHTML = "⭐ Multiplier: " + combo + "x"
 }
 
 const bird_name = localStorage.getItem("bird_name")
