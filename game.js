@@ -1,5 +1,8 @@
 
 //mapbox
+
+
+
 var map = L.map("map").setView([0, 0], 1);
 
 L.tileLayer(
@@ -126,6 +129,7 @@ async function showFlyOptions() {
 					});
 				});
 			}
+			// const backBtn = document.createElement("button") //todo
 		}
 		else {
 			openInfo("You Migrated successfully!", "Remember to enjoy your summer vacation :D")

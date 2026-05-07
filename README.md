@@ -2,7 +2,7 @@
 
 You are a bird migrating away from the deadly cold. Manage your energy and fly from location to location. Scavenge for food to raise your max energy or sleep to recharge all of your energy. Fly farther to get more score and reach your vacation home for the summer!
 
-Dependencies: mysql-connector-python, geopy, bcrypt
+Dependencies: mysql-connector-python, geopy, bcrypt, Flask, flask_cors
 
 Setting up the database for this project:
 
@@ -18,4 +18,17 @@ Give rights for your mariadb user:
 GRANT SELECT, INSERT, UPDATE ON bird_game.* TO username@localhost;
 ```
 
-Run main.py with python to play the game
+You need to create a file called "databaseLoginCredential.txt" in the project root.
+
+```txt
+username = yourDatabaseUsername
+password = yourDatabasePassword
+```
+
+Running the API:
+
+```bash
+python3 api.py
+```
+
+
