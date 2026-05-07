@@ -11,6 +11,7 @@ function Save() {
         userId: localStorage.getItem("userId"),
         currentIcao: localStorage.getItem("currentIcao"),
         currentEnergy: localStorage.getItem("currentEnergy"),
+        speciesName: localStorage.getItem("speciesName"),
         maxEnergy: localStorage.getItem("maxEnergy"),
         score: localStorage.getItem("score"),
         gameId: gameId

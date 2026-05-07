@@ -101,11 +101,7 @@ let energy = state.energy;
 let score = state.score;
 let currentIcao = state.location;
 
-console.log(speciesName)
-console.log(maxEnergy)
-console.log(energy)
-console.log(score)
-console.log(currentIcao)
+localStorage.setItem("speciesName", speciesName)
 
 /*
 let currentIcao = "EFIV";
