@@ -71,7 +71,8 @@ function ShowNewOrOldGame(){
 }
 
 function ShowNewGame(){
-    app.innerHTML = `<header>
+    app.innerHTML = `
+      <header>
         <h1>Bird Game 🪽</h1>
       </header>
 
@@ -129,7 +130,8 @@ function ShowOldGame(){
 }
 
 function ShowGame() {
-    app.innerHTML = `<div id="header">
+    app.innerHTML = `
+<div id="header">
         <header>
             <h1>Bird Game 🪽</h1>
             <nav>
