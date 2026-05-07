@@ -19,7 +19,7 @@ function createUser() {
         .then(data => {
             if (data.success) {
                 localStorage.setItem("user_id", data.player_id);
-                localStorage.setItem("username", username)
+                localStorage.setItem("username", data.username)
 
                 ShowNewOrOldGame()
             } else {

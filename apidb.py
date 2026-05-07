@@ -160,7 +160,7 @@ def login():
     username = data["username"]
     password = data["password"]
 
-    sql = f"SELECT player_id, password_hash FROM user WHERE username='{username}'"
+    sql = f"SELECT player_id, password_hash, username FROM user WHERE username='{username}'"
     db = get_db()
     cursor = db.cursor()
     cursor.execute(sql)
@@ -170,13 +170,14 @@ def login():
         return jsonify(success=False)
 
     user_id = result[0]
+    username = result[2]
 
     print(user_id)
 
     storedHash = result[1].encode()
 
     if bcrypt.checkpw(password.encode(), storedHash):
-        return jsonify(success=True, user_id = user_id)
+        return jsonify(success=True, user_id = user_id, username = username)
 
     return jsonify(success=False)
 
@@ -203,13 +204,14 @@ def createUser():
     db = get_db()
     cursor = db.cursor()
 
-    sql = f"SELECT player_id FROM user WHERE username = '{username}'"
+    sql = f"SELECT player_id, username FROM user WHERE username = '{username}'"
     cursor.execute(sql)
     result = cursor.fetchone()
 
     player_id = result[0]
+    username = result[1]
 
-    return jsonify(success=True, player_id = player_id)
+    return jsonify(success=True, player_id = player_id, username = username)
 
 
 def InsertUser(username, password):
